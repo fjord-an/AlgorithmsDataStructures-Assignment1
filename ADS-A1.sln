@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADS-A1", "ADS-A1\ADS-A1.csproj", "{B53BDABF-F84E-4475-9CD2-8A4F51E7F14D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B53BDABF-F84E-4475-9CD2-8A4F51E7F14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53BDABF-F84E-4475-9CD2-8A4F51E7F14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53BDABF-F84E-4475-9CD2-8A4F51E7F14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53BDABF-F84E-4475-9CD2-8A4F51E7F14D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
