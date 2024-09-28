@@ -20,9 +20,8 @@ public class CharacterAttributes
     public int MaxExperienceToNextLevel { get; private set; }
     public int MaxGold { get; private set; }
 
-    public CharacterAttributes(string name, int health, int attack, int defense, int speed, int level, int experience, int experienceToNextLevel, int gold)
+    public CharacterAttributes(int health, int attack, int defense, int speed, int level, int experience, int experienceToNextLevel, int gold)
     {
-        Name = name;
         Health = health;
         Attack = attack;
         Defense = defense;
@@ -78,7 +77,7 @@ public class CharacterAttributes
 
 public class WarriorAttributes : CharacterAttributes
 {
-    public WarriorAttributes(string name) : base(name, 100, 10, 5, 5, 1, 0, 100, 0)
+    public WarriorAttributes() : base(100, 10, 5, 5, 1, 0, 100, 0)
     {
     }
 }
