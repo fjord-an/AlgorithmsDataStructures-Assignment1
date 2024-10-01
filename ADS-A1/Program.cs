@@ -28,7 +28,14 @@ namespace ADS_A1
 
             while (input != "quit")
             {
+                Console.WriteLine($"You are in {zone1.Name}, a {zone1.Description}");
+                // if (zone1.enemies > 0){
+                //    cw("You Enounter {zone.Characters ? zone.Character != isPlayer : }")
+                // }
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
                 input = Console.ReadLine();
+                Console.ResetColor();
                 if (input == "stats")
                 {
                     // Show the player's stats if they type 'stats'. Can pass any character object to the function.

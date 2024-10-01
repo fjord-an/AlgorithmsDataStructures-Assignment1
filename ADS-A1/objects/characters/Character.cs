@@ -12,10 +12,10 @@ public class Character
     // exposed
     public ICharacterAttributes Attribute { get; set; }
     
-    private double Level { get; set; }
-    private double Health { get; set; }
-    private bool IsAlive { get; set; }
-    private bool isPlayer { get; set; }
+    public double Level { get; set; }
+    public double Health { get; set; }
+    public bool IsAlive { get; set; }
+    public bool isPlayer { get; set; }
     
     // using generic action delegate of the .NET framework so that the player can execute generic actions 
     // in the game, which can be passed by the object itself, so that many different objects can easily be added => extensible
@@ -32,7 +32,7 @@ public class Character
         Health = 100;
     }
     
-    public void Attack(Character target)
+    public void BasicAttack(Character target)
     {
         // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 
         target.Health -= new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level);

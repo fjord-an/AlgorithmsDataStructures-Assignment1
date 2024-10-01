@@ -4,10 +4,10 @@ using ADS_A1.objects.attributes.Interfaces;
 
 namespace ADS_A1.objects.Characters;
 
-public class Warrior : Character
+public class  Mage: Character
 {
     //should inherit from character or composition from attributes?
-    public Warrior(string name, ICharacterAttributes stats) : base(name,  stats)
+    public Mage(string name, ICharacterAttributes stats) : base(name,  stats)
     {
         Interact = (IInteractiveWorldObject obj) =>
         {
@@ -18,7 +18,7 @@ public class Warrior : Character
         };
     }
 
-    public void HeavySwing(Character target)
+    public void FireBall(Character target)
     {
         // Attack functions will return void because damage is inflicted by performing a transformation on the Health property of the target object
         target.Health -= new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level);

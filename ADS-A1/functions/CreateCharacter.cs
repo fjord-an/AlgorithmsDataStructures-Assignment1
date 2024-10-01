@@ -3,6 +3,7 @@ using ADS_A1.objects;
 using ADS_A1;
 using ADS_A1.objects.Attributes;
 using ADS_A1.objects.Attributes.builders;
+using ADS_A1.objects.attributes.Interfaces;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions;
@@ -65,6 +66,38 @@ public class Create
                     .SetExperience(warriorConfig.GetProperty("Experience").GetInt32())
                     .SetExperienceToNextLevel(warriorConfig.GetProperty("ExperienceToNextLevel").GetInt32())
                     .SetGold(warriorConfig.GetProperty("Gold").GetInt32())
+                    .Build()
+                );
+            case "Paladin":
+                JsonElement paladinConfig = _archetypes.GetProperty("Paladin");
+                return new Paladin(name, (PaladinAttributes) new PaladinAttributesBuilder()
+                    .SetMana(paladinConfig.GetProperty("Mana").GetInt32())
+                    .SetMaxMana(paladinConfig.GetProperty("MaxMana").GetInt32())
+                    .SetHolyPower(paladinConfig.GetProperty("HolyPower").GetInt32())
+                    .SetHealth(paladinConfig.GetProperty("Health").GetInt32())
+                    .SetAttack(paladinConfig.GetProperty("Attack").GetInt32())
+                    .SetDefense(paladinConfig.GetProperty("Defense").GetInt32())
+                    .SetSpeed(paladinConfig.GetProperty("Speed").GetInt32())
+                    .SetLevel(paladinConfig.GetProperty("Level").GetInt32())
+                    .SetExperience(paladinConfig.GetProperty("Experience").GetInt32())
+                    .SetExperienceToNextLevel(paladinConfig.GetProperty("ExperienceToNextLevel").GetInt32())
+                    .SetGold(paladinConfig.GetProperty("Gold").GetInt32())
+                    .Build()
+                );
+            case "Mage":
+                JsonElement mageConfig = _archetypes.GetProperty("Mage");
+                return new Mage(name, (MageAttributes) new MageAttributesBuilder()
+                    .SetMana(mageConfig.GetProperty("Mana").GetInt32())
+                    .SetMaxMana(mageConfig.GetProperty("MaxMana").GetInt32())
+                    .SetRunes(mageConfig.GetProperty("Runes").GetInt32())
+                    .SetHealth(mageConfig.GetProperty("Health").GetInt32())
+                    .SetAttack(mageConfig.GetProperty("Attack").GetInt32())
+                    .SetDefense(mageConfig.GetProperty("Defense").GetInt32())
+                    .SetSpeed(mageConfig.GetProperty("Speed").GetInt32())
+                    .SetLevel(mageConfig.GetProperty("Level").GetInt32())
+                    .SetExperience(mageConfig.GetProperty("Experience").GetInt32())
+                    .SetExperienceToNextLevel(mageConfig.GetProperty("ExperienceToNextLevel").GetInt32())
+                    .SetGold(mageConfig.GetProperty("Gold").GetInt32())
                     .Build()
                 );
             case null:
