@@ -1,9 +1,16 @@
-namespace ADS_A1.objects;
+using ADS_A1.objects.Attributes;
+using ADS_A1.objects.attributes.Interfaces;
 
-public abstract class Character
+namespace ADS_A1.objects.Characters;
+
+public class Character
 {
     public String Name { get; set; }
-    public CharacterAttributes Attribute { get; set; }
+    // I have decoupled the characters attributes so that they can
+    // be easily extended and tested. Considering stats are a very
+    // finicky and subjective to change at all times, only the interface is
+    // exposed
+    public ICharacterAttributes Attribute { get; set; }
     
     private double Level { get; set; }
     private double Health { get; set; }
@@ -17,7 +24,7 @@ public abstract class Character
     public virtual Action<IInteractiveWorldObject>? Interact { get; set; }
 
 
-    protected Character(string name, CharacterAttributes attribute)
+    public Character(string name, ICharacterAttributes attribute)
     {
         Name = name;
         Attribute = attribute;
@@ -31,19 +38,4 @@ public abstract class Character
         target.Health -= new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level);
     }
 
-}
-
-public class Warrior : Character
-{
-    //should inherit from character or composition from attributes?
-    public Warrior(string name, WarriorAttributes stats) : base(name,  stats)
-    {
-        Interact = (IInteractiveWorldObject obj) =>
-        {
-            if (obj is Door door)
-            {
-                door.Activate();
-            }
-        };
-    }
 }

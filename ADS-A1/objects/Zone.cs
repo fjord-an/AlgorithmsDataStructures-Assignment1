@@ -1,3 +1,5 @@
+using ADS_A1.objects.Characters;
+
 namespace ADS_A1.objects;
 
 public class Zone : INonInteractiveWorldObject
