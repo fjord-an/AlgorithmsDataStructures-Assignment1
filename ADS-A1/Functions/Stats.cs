@@ -57,7 +57,7 @@ public static class Stats
             // Skip the Name property as it is not a stat (it is the character name/identifier)
             // Then add the property to the dictionary to assign to the character object string
             if (a.Name == "Name") continue;
-            Console.WriteLine(a);
+            
             var value = a.GetValue(character.Attribute);
             dict.Add(a.Name, value.ToString());
         }

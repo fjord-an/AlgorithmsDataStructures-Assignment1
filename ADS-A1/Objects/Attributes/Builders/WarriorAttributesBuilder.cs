@@ -8,6 +8,7 @@ public class WarriorAttributesBuilder : CharacterAttributesBuilder
     private int _rage;
     private int _maxRage;
 
+    
     public WarriorAttributesBuilder SetRage(int rage)
     {
         _rage = rage;

@@ -36,22 +36,45 @@ namespace Tests
         public void TestAppendConfig()
         {
             // Initialize test data
-            ICharacterAttributes defaultAttributes = new CharacterAttributesBuilder().Build();
-            var warrior = new Warrior("Warrior", defaultAttributes);
-            var mage = new Mage("Mage", defaultAttributes);
+            ICharacterAttributes defaultAttributes = new CharacterAttributesBuilder()
+                .SetAttack(10)
+                .SetDefense(10)
+                .SetExperience(10)
+                .SetGold(10)
+                .SetHealth(10)
+                .SetLevel(11)
+                .SetSpeed(10)
+                .SetExperienceToNextLevel(10)
+                .Build();
+
+            ICharacterAttributes warriorAttributes = new WarriorAttributesBuilder()
+                .SetRage(10)
+                .SetMaxRage(5)
+                .SetAttack(10)
+                .SetDefense(10)
+                .SetExperience(10)
+                .SetGold(10)
+                .SetHealth(10)
+                .SetLevel(11)
+                .SetSpeed(10)
+                .SetExperienceToNextLevel(10)
+                .Build();
+            
+            var warrior = new Warrior("Warrior", warriorAttributes);
+            var bob = new Character("Bob", defaultAttributes);
 
             // Append characters to the JSON file
             Config.AppendConfig(_tempFilePath, warrior);
-            Config.AppendConfig(_tempFilePath, mage);
+            Config.AppendConfig(_tempFilePath, bob);
 
             // Verify the results
             var jsonString = File.ReadAllText(_tempFilePath);
-            var characters = JsonSerializer.Deserialize<List<Character>>(jsonString);
+            var characters = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(jsonString);
 
             Assert.NotNull(characters);
             Assert.AreEqual(2, characters.Count);
-            Assert.IsTrue(characters.Exists(c => c.Name == "Warrior"));
-            Assert.IsTrue(characters.Exists(c => c.Name == "Mage"));
+            Assert.IsTrue(characters.Any(c => c.Key == "Warrior"));
+            Assert.IsTrue(characters.Any(c => c.Key == "Bob"));
         }
     }
 }
