@@ -1,10 +1,11 @@
+using System.Reflection;
 using ADS_A1.objects;
 using ADS_A1.objects.Attributes;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions;
 
-public class Stats
+public static class Stats
 {
     public static void Show(Character character)
     {
@@ -44,6 +45,24 @@ public class Stats
                 Console.WriteLine($"Runes:\n\t\t\t{mage.Runes}");
                 break;
         }
+    }
+    
+    public static Dictionary<string, string> ConvertStatsToDictionary(Character character)
+    {
+        Dictionary<string, string> dict = new();
+
+        foreach (var a in character.Attribute.GetType().GetProperties())
+        {
+            // iterate through all properties of the character attribute object and convert them to a string
+            // Skip the Name property as it is not a stat (it is the character name/identifier)
+            // Then add the property to the dictionary to assign to the character object string
+            if (a.Name == "Name") continue;
+            Console.WriteLine(a);
+            var value = a.GetValue(character.Attribute);
+            dict.Add(a.Name, value.ToString());
+        }
+
+        return dict;
     }
 }
     

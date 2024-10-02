@@ -17,4 +17,8 @@
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ADS-A1\ADS-A1.csproj" />
+    </ItemGroup>
+
 </Project>

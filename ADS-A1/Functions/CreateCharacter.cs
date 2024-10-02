@@ -3,7 +3,6 @@ using ADS_A1.objects;
 using ADS_A1;
 using ADS_A1.objects.Attributes;
 using ADS_A1.objects.Attributes.builders;
-using ADS_A1.objects.attributes.Interfaces;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions;

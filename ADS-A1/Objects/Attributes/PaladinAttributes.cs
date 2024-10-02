@@ -1,5 +1,6 @@
+using ADS_A1.Interfaces;
+using ADS_A1.Interfaces.CharacterAttributes;
 using ADS_A1.objects.Attributes.builders;
-using ADS_A1.objects.attributes.Interfaces;
 
 namespace ADS_A1.objects.Attributes;
 

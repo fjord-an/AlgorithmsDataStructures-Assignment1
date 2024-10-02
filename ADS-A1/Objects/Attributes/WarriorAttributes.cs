@@ -1,25 +1,24 @@
 using ADS_A1.functions;
+using ADS_A1.Interfaces;
+using ADS_A1.Interfaces.CharacterAttributes;
 using ADS_A1.objects.Attributes.builders;
-using ADS_A1.objects.attributes.Interfaces;
 
 namespace ADS_A1.objects.Attributes;
 
-public class MageAttributes : CharacterAttributes, IMageAttributes
+public class WarriorAttributes : CharacterAttributes, IWarriorAttributes
 // Inherit the common/generic CharacterAttributes and implement the IWarriorAttributes
 // so that only the interface is exposed to the game
 {
-    public int Mana { get; }
-    public int MaxMana { get; }
-    public int Runes { get; }
+    public int Rage { get; }
+    public int MaxRage { get; }
     
-    public MageAttributes(MageAttributesBuilder attributes) 
+    public WarriorAttributes(WarriorAttributesBuilder attributes) 
         : base(attributes)
     //using a builder to initialise stats
     {
         // Add the warriors stats passed to the object being used
-        Mana = attributes.Mana;
-        MaxMana = attributes.MaxMana;
-        Runes = attributes.Runes;
+        Rage = attributes.Rage;
+        MaxRage = attributes.MaxRage;
     }
    
 }

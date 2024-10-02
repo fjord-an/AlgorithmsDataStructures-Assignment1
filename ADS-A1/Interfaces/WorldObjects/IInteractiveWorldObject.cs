@@ -1,4 +1,4 @@
-namespace ADS_A1;
+namespace ADS_A1.Interfaces.WorldObjects;
 
 public interface IInteractiveWorldObject
 {

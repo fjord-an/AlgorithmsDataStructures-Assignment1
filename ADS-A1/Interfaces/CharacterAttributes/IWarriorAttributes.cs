@@ -1,4 +1,4 @@
-namespace ADS_A1.objects.attributes.Interfaces;
+namespace ADS_A1.Interfaces.CharacterAttributes;
 
 public interface IWarriorAttributes : ICharacterAttributes
 {
