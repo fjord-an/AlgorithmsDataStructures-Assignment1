@@ -13,6 +13,7 @@ public static class Stats
         Console.WriteLine("Your stats are: ");
         Console.ResetColor();
         Console.WriteLine("Health:\n\t\t\t" + character.Attribute.Health);
+        Console.WriteLine("Max Health:\n\t\t\t" + character.Attribute.MaxHealth);
         Console.WriteLine("Attack:\n\t\t\t" + character.Attribute.Attack);
         Console.WriteLine("Defense:\n\t\t\t" + character.Attribute.Defense);
         Console.WriteLine("Speed:\n\t\t\t" + character.Attribute.Speed);
@@ -47,9 +48,9 @@ public static class Stats
         }
     }
     
-    public static Dictionary<string, string> ConvertStatsToDictionary(Character character)
+    public static Dictionary<string, int> ConvertStatsToDictionary(Character character)
     {
-        Dictionary<string, string> dict = new();
+        Dictionary<string, int> dict = new();
 
         foreach (var a in character.Attribute.GetType().GetProperties())
         {
@@ -59,7 +60,7 @@ public static class Stats
             if (a.Name == "Name") continue;
             
             var value = a.GetValue(character.Attribute);
-            dict.Add(a.Name, value.ToString());
+            // dict.Add(a.Name, value.ToString());
         }
 
         return dict;

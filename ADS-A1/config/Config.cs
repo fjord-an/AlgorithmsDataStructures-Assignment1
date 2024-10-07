@@ -1,7 +1,10 @@
 using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Net;
 using System.Text.Json;
 using ADS_A1.Interfaces.CharacterAttributes;
 using ADS_A1.objects.Attributes;
+using ADS_A1.objects.Attributes.builders;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions;
@@ -50,8 +53,59 @@ public class Config
     {
         try
         {
-            var jsonString = JsonSerializer.Serialize(character); 
-            File.WriteAllText(path, jsonString);
+            switch (character)
+            {
+                case Paladin:
+                    AppendConfig(path, new Paladin("Paladin", new PaladinAttributesBuilder()
+                        .SetMana(100)
+                        .SetMaxMana(100)
+                        .SetHolyPower(0)
+                        .SetAttack(20)
+                        .SetDefense(20)
+                        .SetSpeed(10)
+                        .SetHealth(120)
+                        .SetMaxHealth(100)
+                        .SetExperience(0)
+                        .SetGold(0)
+                        .SetLevel(1)
+                        .SetExperienceToNextLevel(100)
+                        .Build()
+                    ));
+                    break;
+                case Warrior:
+                    AppendConfig(path, new Warrior("Warrior", new WarriorAttributesBuilder()
+                        .SetRage(0)
+                        .SetMaxRage(100)
+                        .SetAttack(30)
+                        .SetDefense(20)
+                        .SetSpeed(10)
+                        .SetHealth(100)
+                        .SetMaxHealth(100)
+                        .SetExperience(0)
+                        .SetGold(0)
+                        .SetLevel(1)
+                        .SetExperienceToNextLevel(100)
+                        .Build()
+                    ));
+                    break;
+                case Mage:
+                    AppendConfig(path, new Mage("Mage", new MageAttributesBuilder()
+                        .SetMana(100)
+                        .SetMaxMana(100)
+                        .SetRunes(0)
+                        .SetAttack(20)
+                        .SetDefense(10)
+                        .SetSpeed(20)
+                        .SetHealth(80)
+                        .SetMaxHealth(100)
+                        .SetExperience(0)
+                        .SetGold(0)
+                        .SetLevel(1)
+                        .SetExperienceToNextLevel(100)
+                        .Build()
+                    ));
+                    break;
+            }
         }
         catch (Exception e)
         {
@@ -59,11 +113,12 @@ public class Config
         }
     }
 
+
     public static void AppendConfig(string path, Character character)
     {
         // TODO 2/10 NOT APPENDING OTHER CHARACTERS! CHECK BELOW 
         // Create a dictionary to hold the characters and their stats
-        Dictionary<string, Dictionary<string, string>> charactersConfig;
+        Dictionary<string, Dictionary<string, int>> charactersConfig;
         
 
         // Check if file exists and read existing content
@@ -72,51 +127,17 @@ public class Config
             var existingJson = File.ReadAllText(path);
             // enumerate a dictionary of characters from the JSON file to check for duplicates
             // This ternary operation deserializes existing JSON content to a dictionary, else if the file is not found, return an empty (nested) dictionary instead
-            charactersConfig = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(existingJson)
-                               ?? new Dictionary<string, Dictionary<string, string>>();
+            charactersConfig = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, int>>>(existingJson)
+                               ?? new Dictionary<string, Dictionary<string, int>>();
         }
         else
         {
             // if file doesn't exist create a new Dictionary instance to write to a JSON with the Character stats 
-            charactersConfig = new Dictionary<string, Dictionary<string, string>>();
+            charactersConfig = new Dictionary<string, Dictionary<string, int>>();
         }
-
-            // Create instances of each character type
-            // ICharacterAttributes defaultAttributes = new CharacterAttributes(); // Assuming a default implementation
-            // var warrior = new Warrior("Warrior", defaultAttributes);
-            // var paladin = new Paladin("Paladin", defaultAttributes);
-            // var character = new Character("Character", defaultAttributes);
-
-            // check for duplicate characters
-            ///************ COMMENTED OUT
-            // foreach (var c in charactersConfig)
-            //     // will make the AppendConfig method 0(n^2) because it is called within a loop but this is fine as the
-            //     // number of characters will be relatively small and the configuration file will only need to be created once
-            // {
-            //
-            //     // compare the key of the dictionary (name of the character type) to the name of the character being added to the config file
-            //     //todo CHECK condition here if appending mage with json doc read above
-            //     if (c.Key == character.Name || charactersConfig.ContainsKey(c.Key))
-            //     {
-            //         // if character is in the deserialized Json Object, print message and continue to next character
-            //         Console.WriteLine($"Character {character.Name} already exists in the config file at {path}");
-            //         continue;
-            //     }
-            //
-            //     // if character is not in the deserialized Json Object add character to the list
-            //     Console.WriteLine($"Adding {c.Key} to config file");
-            //     // TODO uncomment when string conversion is implemented
-            //     charactersConfig.Add(c.Key, c.Value);
-            // }
-            /// ***********8
 
             // checking for duplicate characters:
-        if(charactersConfig.ContainsKey(character.Name))
-        {
-            // If the Character is already in the config, print a message and continue
-            Console.WriteLine($"Character {character.Name} already exists in the config file at {path}");
-        }
-        else
+        if(!charactersConfig.ContainsKey(character.Name))
         {
             // if the character does not exist in the file, add the character to the dictionary to write
             // The stats are converted from an object to a dictionary of strings before writing to JSON

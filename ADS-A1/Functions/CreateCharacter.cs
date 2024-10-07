@@ -7,35 +7,50 @@ using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions;
 
-public class Create
+public static class Create
 {
     // Must load the config.json file which holds all of the base stats for each class.
     // Using a config file to set complex objects makes the game/code more clean and
-    // maintainable (refer to Config.cs)
+    // maintainable (refer to Config.cs). This game is designed to be easily modifiable, which is
+    // why the stats are not hardcoded into the game. This way, the game can be easily balanced
+    // and changed without needing to change the code. The JSON document is therefore tightly
+    // coupled with the CreateCharacter class, as it is a core part of the game's functionality.
     
-    //can pass config path in optionally
+    // The path of the config file must be set before any characters can be created
     
     // TODO add JsonDocument Documentation for methods used
-    private static string _jsonPath = "config.json";
+    private static string _jsonPath;
     // deserialises the JSON file to use
-    private static readonly JsonDocument _config = Config.LoadConfig(_jsonPath);
+    private static JsonDocument _config;
     // get the 'RootElement' of the JSON doc, which holds the Key-Value pairs for the object
-    private static readonly JsonElement _archetypes = _config.RootElement;
-        
+    private static JsonElement _archetypes;
+
     public static void SetConfigPath(string path)
     // default value assigned to executable root location (.) if not passed
     {
         _jsonPath = path;
+        _config = Config.LoadConfig(_jsonPath);
+        _archetypes = _config.RootElement;
     }
 
     public static Character NewCharacter(string name, string characterType)
     {
-        if (_config is null) 
+        while (_config is null)
             //check if the value type of config object is null, meaning it does not exist. the is keyword must be used
         // with a logical operator as it is a generic or dynamic type
         {
-            throw new InvalidOperationException(
-                $"Character/Class Configuration file cannot be loaded for a {characterType}: {name}. Refer to the config/ directory");
+            try
+            {
+                _config = Config.LoadConfig(_jsonPath);
+                _archetypes = _config.RootElement;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine($"Character Configuration file cannot be loaded for a {characterType}: {name}. Please ensure the file exists and is correctly formatted.");
+                Console.WriteLine("Please enter the correct path to the configuration file or type 'quit' to exit the game.");
+                _jsonPath = Console.ReadLine();
+            }
         }
 
           // by using builders, i can efficiently add and update stats at whim, while maintatin data integrity
@@ -58,6 +73,7 @@ public class Create
                     .SetRage(warriorConfig.GetProperty("Rage").GetInt32())
                     .SetMaxRage(warriorConfig.GetProperty("MaxRage").GetInt32())
                     .SetHealth(warriorConfig.GetProperty("Health").GetInt32())
+                    .SetMaxHealth(warriorConfig.GetProperty("MaxHealth").GetInt32())
                     .SetAttack(warriorConfig.GetProperty("Attack").GetInt32())
                     .SetDefense(warriorConfig.GetProperty("Defense").GetInt32())
                     .SetSpeed(warriorConfig.GetProperty("Speed").GetInt32())
@@ -74,6 +90,7 @@ public class Create
                     .SetMaxMana(paladinConfig.GetProperty("MaxMana").GetInt32())
                     .SetHolyPower(paladinConfig.GetProperty("HolyPower").GetInt32())
                     .SetHealth(paladinConfig.GetProperty("Health").GetInt32())
+                    .SetMaxHealth(paladinConfig.GetProperty("MaxHealth").GetInt32())
                     .SetAttack(paladinConfig.GetProperty("Attack").GetInt32())
                     .SetDefense(paladinConfig.GetProperty("Defense").GetInt32())
                     .SetSpeed(paladinConfig.GetProperty("Speed").GetInt32())
@@ -90,6 +107,7 @@ public class Create
                     .SetMaxMana(mageConfig.GetProperty("MaxMana").GetInt32())
                     .SetRunes(mageConfig.GetProperty("Runes").GetInt32())
                     .SetHealth(mageConfig.GetProperty("Health").GetInt32())
+                    .SetMaxHealth(mageConfig.GetProperty("MaxHealth").GetInt32())
                     .SetAttack(mageConfig.GetProperty("Attack").GetInt32())
                     .SetDefense(mageConfig.GetProperty("Defense").GetInt32())
                     .SetSpeed(mageConfig.GetProperty("Speed").GetInt32())

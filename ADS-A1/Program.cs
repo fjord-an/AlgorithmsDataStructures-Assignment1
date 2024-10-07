@@ -2,6 +2,7 @@
 using ADS_A1.functions;
 using ADS_A1.functions.prompt;
 using ADS_A1.objects.Attributes;
+using ADS_A1.objects.Attributes.builders;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1
@@ -14,6 +15,14 @@ namespace ADS_A1
             //TODO consider making new character classes and attributes addable by a json file for player customisation
             // introduce and enter a new character name
             Console.WriteLine("Welcome to the Text Adventure!");
+            
+            Create.SetConfigPath("CharacterStats.json");
+            
+            // Create the character config JSON file if it does not exist with default values.
+            Config.NewConfig("CharacterStats.json", new Warrior("Warrior", new WarriorAttributesBuilder().Build()));
+            Config.NewConfig("CharacterStats.json", new Mage("Mage", new MageAttributesBuilder().Build()));
+            Config.NewConfig("CharacterStats.json", new Paladin("Paladin", new PaladinAttributesBuilder().Build()));
+            
             Character player = CreateCharacterPrompt.Prompt();
             
             Console.WriteLine("Loading World...");

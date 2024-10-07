@@ -29,17 +29,17 @@ namespace Tests
             );
 
             // Act
-            Dictionary<string, string> result = Stats.ConvertStatsToDictionary(character);
+            Dictionary<string, int> result = Stats.ConvertStatsToDictionary(character);
 
             // Assert
-            Assert.AreEqual("10", result["Health"]);
-            Assert.AreEqual("10", result["Attack"]);
-            Assert.AreEqual("10", result["Defense"]);
-            Assert.AreEqual("10", result["Speed"]);
-            Assert.AreEqual("11", result["Level"]);
-            Assert.AreEqual("10", result["Experience"]);
-            Assert.AreEqual("10", result["ExperienceToNextLevel"]);
-            Assert.AreEqual("10", result["Gold"]);
+            Assert.AreEqual(10, result["Health"]);
+            Assert.AreEqual(10, result["Attack"]);
+            Assert.AreEqual(10, result["Defense"]);
+            Assert.AreEqual(10, result["Speed"]);
+            Assert.AreEqual(11, result["Level"]);
+            Assert.AreEqual(10, result["Experience"]);
+            Assert.AreEqual(10, result["ExperienceToNextLevel"]);
+            Assert.AreEqual(10, result["Gold"]);
         }
     }
 }

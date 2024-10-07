@@ -13,6 +13,7 @@ public class CharacterAttributesBuilder
     // https://www.reddit.com/r/dotnet/comments/1adwyic/factory_vs_builder/
     
     private int _health;
+    private int _maxHealth;
     private int _attack;
     private int _defense;
     private int _speed;
@@ -24,6 +25,12 @@ public class CharacterAttributesBuilder
     public CharacterAttributesBuilder SetHealth(int health)
     {
         _health = health;
+        return this;
+    }
+
+    public CharacterAttributesBuilder SetMaxHealth(int maxHealth)
+    {
+        _maxHealth = maxHealth;
         return this;
     }
 

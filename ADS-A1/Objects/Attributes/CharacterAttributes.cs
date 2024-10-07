@@ -13,6 +13,7 @@ public class CharacterAttributes : ICharacterAttributes
 {
     public string Name { get; private set; }
     public int Health { get; private set; }
+    public int MaxHealth { get; private set; }
     public int Attack { get; private set; }
     public int Defense { get; private set; }
     public int Speed { get; private set; }
