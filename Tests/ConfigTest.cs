@@ -69,12 +69,14 @@ namespace Tests
 
             // Verify the results
             var jsonString = File.ReadAllText(_tempFilePath);
-            var characters = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(jsonString);
+            var characters = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, int>>>(jsonString);
 
             Assert.NotNull(characters);
             Assert.AreEqual(2, characters.Count);
             Assert.IsTrue(characters.Any(c => c.Key == "Warrior"));
             Assert.IsTrue(characters.Any(c => c.Key == "Bob"));
+            Assert.IsTrue(characters.Any(c => c.Key== "Health"));
+            Assert.IsTrue(characters["Warrior"]["Health"] == 10);
         }
     }
 }

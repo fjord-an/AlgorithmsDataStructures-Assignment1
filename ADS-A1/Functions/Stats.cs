@@ -60,7 +60,7 @@ public static class Stats
             if (a.Name == "Name") continue;
             
             var value = a.GetValue(character.Attribute);
-            // dict.Add(a.Name, value.ToString());
+            dict.Add(a.Name, value is null ? 0 : (int)value);
         }
 
         return dict;

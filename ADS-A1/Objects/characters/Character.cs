@@ -17,7 +17,7 @@ public class Character
     public double Level { get; set; }
     public double Health { get; set; }
     public bool IsAlive { get; set; }
-    public bool isPlayer { get; set; }
+    public bool IsPlayer { get; private set; }
     
     // using generic action delegate of the .NET framework so that the player can execute generic actions 
     // in the game, which can be passed by the object itself, so that many different objects can easily be added => extensible
@@ -26,12 +26,13 @@ public class Character
     public virtual Action<IInteractiveWorldObject>? Interact { get; set; }
 
 
-    public Character(string name, ICharacterAttributes attribute)
+    public Character(string name, ICharacterAttributes attribute, bool isPlayer=false)
     {
         Name = name;
         Attribute = attribute;
         Level = 1;
         Health = 100;
+        IsPlayer = isPlayer;
     }
     
     public void BasicAttack(Character target)

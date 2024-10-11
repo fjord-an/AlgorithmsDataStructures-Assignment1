@@ -33,7 +33,7 @@ public class CreateCharacterPrompt
             }
         } while (!archetypeList.Contains(classSelection));
 
-        Character player = Create.NewCharacter(characterName, classSelection);
+        Character player = Create.NewCharacter(characterName, classSelection, isPlayer: true);
 
         return player;
     }

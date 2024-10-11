@@ -69,7 +69,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build()
+                        .Build(), false
                     ));
                     break;
                 case Warrior:
@@ -85,7 +85,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build()
+                        .Build(), false
                     ));
                     break;
                 case Mage:
@@ -102,7 +102,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build()
+                        .Build(), false
                     ));
                     break;
             }
@@ -116,7 +116,7 @@ public class Config
 
     public static void AppendConfig(string path, Character character)
     {
-        // TODO 2/10 NOT APPENDING OTHER CHARACTERS! CHECK BELOW 
+        // This method will create the Character Stats Configuration file to a default state.
         // Create a dictionary to hold the characters and their stats
         Dictionary<string, Dictionary<string, int>> charactersConfig;
         
@@ -124,9 +124,11 @@ public class Config
         // Check if file exists and read existing content
         if (File.Exists(path))
         {
-            var existingJson = File.ReadAllText(path);
+            string existingJson = File.ReadAllText(path);
+            
             // enumerate a dictionary of characters from the JSON file to check for duplicates
-            // This ternary operation deserializes existing JSON content to a dictionary, else if the file is not found, return an empty (nested) dictionary instead
+            // This ternary operation deserializes (parses) existing JSON content to a dictionary (from a string),
+            // else if the file is not found, return an empty (nested) dictionary instead
             charactersConfig = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, int>>>(existingJson)
                                ?? new Dictionary<string, Dictionary<string, int>>();
         }
@@ -139,8 +141,8 @@ public class Config
             // checking for duplicate characters:
         if(!charactersConfig.ContainsKey(character.Name))
         {
-            // if the character does not exist in the file, add the character to the dictionary to write
-            // The stats are converted from an object to a dictionary of strings before writing to JSON
+            // if the character does not exist in the file, add the character to the dictionary to write.
+            // The stats are converted from the character objects propertues to a dictionary before writing to a serialized JSON file
             charactersConfig.Add(character.Name, Stats.ConvertStatsToDictionary(character));
             Console.WriteLine($"Adding {character.Name} to a new config file");
 

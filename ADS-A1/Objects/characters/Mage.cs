@@ -9,7 +9,7 @@ namespace ADS_A1.objects.Characters;
 public class  Mage: Character
 {
     //should inherit from character or composition from attributes?
-    public Mage(string name, ICharacterAttributes stats) : base(name,  stats)
+    public Mage(string name, ICharacterAttributes stats, bool isPlayer=false) : base(name,  stats, isPlayer)
     {
         Interact = (IInteractiveWorldObject obj) =>
         {

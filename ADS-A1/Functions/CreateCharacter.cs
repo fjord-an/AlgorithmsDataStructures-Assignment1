@@ -10,30 +10,36 @@ namespace ADS_A1.functions;
 public static class Create
 {
     // Must load the config.json file which holds all of the base stats for each class.
-    // Using a config file to set complex objects makes the game/code more clean and
-    // maintainable (refer to Config.cs). This game is designed to be easily modifiable, which is
-    // why the stats are not hardcoded into the game. This way, the game can be easily balanced
-    // and changed without needing to change the code. The JSON document is therefore tightly
+    // Using a centralized config file to set complex objects assists in making the game more 
+    // maintainable and balanced. (refer to Config.cs). Stats can be easily updated
+    // without needing to change the code. The JSON document is therefore tightly
     // coupled with the CreateCharacter class, as it is a core part of the game's functionality.
     
-    // The path of the config file must be set before any characters can be created
+    // A default config should be generated before creating any characters using AppendConfig() method below.
+    
     
     // TODO add JsonDocument Documentation for methods used
     private static string _jsonPath;
-    // deserialises the JSON file to use
+    // deserializes the JSON file (Document) to use
     private static JsonDocument _config;
     // get the 'RootElement' of the JSON doc, which holds the Key-Value pairs for the object
     private static JsonElement _archetypes;
 
-    public static void SetConfigPath(string path)
-    // default value assigned to executable root location (.) if not passed
+    public static void SetConfigPath(string path=".")
+    // default value assigned to executable root directory (.) if not passed
+    // TODO review complexity and coupling of this method: consider moving to Config.cs
     {
         _jsonPath = path;
         _config = Config.LoadConfig(_jsonPath);
+        
+        // if the config file does not exist, create a new one with default values to avoid errors at character creation before initialising the config Document
+        if(_config is null)
+            Config.AppendConfig(_jsonPath, new Character("DefaultCharacter", new CharacterAttributesBuilder().Build(), false));
+        // load the config file if exists
         _archetypes = _config.RootElement;
     }
 
-    public static Character NewCharacter(string name, string characterType)
+    public static Character NewCharacter(string name, string characterType, bool isPlayer = false)
     {
         while (_config is null)
             //check if the value type of config object is null, meaning it does not exist. the is keyword must be used
@@ -81,12 +87,12 @@ public static class Create
                     .SetExperience(warriorConfig.GetProperty("Experience").GetInt32())
                     .SetExperienceToNextLevel(warriorConfig.GetProperty("ExperienceToNextLevel").GetInt32())
                     .SetGold(warriorConfig.GetProperty("Gold").GetInt32())
-                    .Build()
+                    .Build(), isPlayer
                 );
             case "Paladin":
                 JsonElement paladinConfig = _archetypes.GetProperty("Paladin");
                 return new Paladin(name, (PaladinAttributes) new PaladinAttributesBuilder()
-                    .SetMana(paladinConfig.GetProperty("Mana").GetInt32())
+                    .SetMana(Convert.ToInt32(paladinConfig.GetProperty("Mana").GetInt32()))
                     .SetMaxMana(paladinConfig.GetProperty("MaxMana").GetInt32())
                     .SetHolyPower(paladinConfig.GetProperty("HolyPower").GetInt32())
                     .SetHealth(paladinConfig.GetProperty("Health").GetInt32())
@@ -98,7 +104,7 @@ public static class Create
                     .SetExperience(paladinConfig.GetProperty("Experience").GetInt32())
                     .SetExperienceToNextLevel(paladinConfig.GetProperty("ExperienceToNextLevel").GetInt32())
                     .SetGold(paladinConfig.GetProperty("Gold").GetInt32())
-                    .Build()
+                    .Build(), isPlayer
                 );
             case "Mage":
                 JsonElement mageConfig = _archetypes.GetProperty("Mage");
@@ -115,7 +121,7 @@ public static class Create
                     .SetExperience(mageConfig.GetProperty("Experience").GetInt32())
                     .SetExperienceToNextLevel(mageConfig.GetProperty("ExperienceToNextLevel").GetInt32())
                     .SetGold(mageConfig.GetProperty("Gold").GetInt32())
-                    .Build()
+                    .Build(), isPlayer 
                 );
             case null:
                 // catch an invalid class/null entry from configuration file before defaulting to Character type
@@ -132,7 +138,7 @@ public static class Create
                     .SetExperience(characterConfig.GetProperty("Experience").GetInt32())
                     .SetExperienceToNextLevel(characterConfig.GetProperty("ExperienceToNextLevel").GetInt32())
                     .SetGold(characterConfig.GetProperty("Gold").GetInt32())
-                    .Build()
+                    .Build(), isPlayer
                 );
         }
     }

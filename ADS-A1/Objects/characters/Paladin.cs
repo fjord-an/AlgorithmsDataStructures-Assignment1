@@ -7,7 +7,7 @@ namespace ADS_A1.objects.Characters;
 
 public class Paladin : Warrior
 {
-    public Paladin(string name, ICharacterAttributes stats) : base(name, stats)
+    public Paladin(string name, ICharacterAttributes stats, bool isPlayer=false) : base(name, stats, isPlayer)
     {
         
     }

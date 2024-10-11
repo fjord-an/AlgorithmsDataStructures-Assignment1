@@ -5,48 +5,49 @@ namespace ADS_A1.objects;
 
 public class World
 {
-    private Zone _currentZone { get; set; }
-    private Zone _firstZone { get; set; }
+    private Zone _startingZone { get; set; }
     private Zone _lastZone { get; set; }
     private Door _firstDoor { get; set; }
     private Door _lastDoor { get; set; }
-    private List<Character> _enemies { get; set; }
+    public Zone PlayersCurrentZone { get; set; }
     
-    public World()
+    public Zone GetPlayersCurrentZone(Character player)
     {
-        _currentZone = null;
-        _firstZone = null;
-        _lastZone = null;
-        _firstDoor = null;
-        _lastDoor = null;
-        _enemies = new List<Character>();
+        Zone zone = _startingZone;
+        while (zone is not null)
+        {
+            if (zone.ZoneCharacters.GetCharacters().Contains(player))
+            {
+                // player is in this zone
+                return zone;
+            }
+            zone = zone.NextZone;
+        }
+        throw new Exception("Player not found in any zone, please try again or load a saved game");
     }
     
-    public void AddZone(Zone zone)
+    public void AddZone(Zone zone, bool containsPlayer=false)
     {
-        if (_firstZone == null)
+        if (_startingZone == null)
         {
-            _firstZone = zone;
-            _lastZone = zone;
+            // initialize the world with the first zone
+             _startingZone = zone;
         }
         else
         {
-            _lastZone._currentZone = zone;
+            Zone current = _startingZone;
+            // add the zone to the end of the linked list
+            while(current.NextZone is not null)
+            {
+                current = current.NextZone;
+            }
+            current.NextZone = zone;
+            zone.PreviousZone = current;
             _lastZone = zone;
-        }
-    }
-    
-    public void AddEnemy(Character enemy)
-    {
-        _enemies.Add(enemy);
-    }
-    
-    public void SpawnEnemies()
-    {
-        foreach (Character enemy in _enemies)
-        {
-            Console.WriteLine("You encounter " + enemy.Name);
+            if (containsPlayer)
+            {
+                PlayersCurrentZone = zone;
+            }
         }
     }
 }
-    

@@ -16,21 +16,21 @@ public class Zone : INonInteractiveWorldObject
     public string Name { get; private set; }
     public string Description { get; private set; }
     
-    public Zone _currentZone { get; set; }
-    private Zone _firstZone { get; set; }
-    private Zone _lastZone { get; set; }
+    public Zone CurrentZone { get; set; }
+    public Zone PreviousZone { get; set; }
+    public Zone NextZone { get; set; }
     public List<IInteractiveWorldObject> Doors { get; private set; }
-    private List<Character> _enemies { get; set; }
+    public CharacterContainer ZoneCharacters { get; private set; }
     
     public Zone(string name, string description)
     {
         Name = name;
         Description = description;
-        _currentZone = this;
-        _firstZone = this;
-        _lastZone = this;
+        CurrentZone = this;
+        PreviousZone = null;
+        NextZone = null;
         Doors = new List<IInteractiveWorldObject>(); // list of doors in the zone
-        _enemies = new List<Character>();
+        ZoneCharacters = new CharacterContainer();
     }
     
     public void AddInteractiveObject(IInteractiveWorldObject InteractiveObject) 
@@ -38,5 +38,4 @@ public class Zone : INonInteractiveWorldObject
         // Add Interactive objects to the zone such as doors and items
         Doors.Add(InteractiveObject);
     }
-
 }
