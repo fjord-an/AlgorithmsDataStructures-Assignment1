@@ -20,6 +20,10 @@ public class CharacterContainer
     }
 
     public IEnumerable<Character> GetCharacters()
+    // IEnumerable is used to return a sequence of characters
+    // This is useful for iterating over the characters in the container
+    // and performing LINQ queries on the collection of characters
+    // Hamedani, M. (Director). (2015). LINQ - C# Advanced Course [Video recording].
     {
         return _characters;
     }

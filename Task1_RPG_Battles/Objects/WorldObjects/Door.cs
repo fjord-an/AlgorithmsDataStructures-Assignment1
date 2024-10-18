@@ -1,7 +1,6 @@
-using ADS_A1.Interfaces;
 using ADS_A1.Interfaces.WorldObjects;
 
-namespace ADS_A1.objects;
+namespace ADS_A1.Objects.WorldObjects;
 
 public class Door : IInteractiveWorldObject
 {
@@ -9,7 +8,7 @@ public class Door : IInteractiveWorldObject
     private string _description { get; set; }
     private bool _isActivated { get; set; }
     private bool _isInteractive { get; set; }
-    public Zone NextZone { get; set; }
+    public IZone NextZone { get; set; }
 
     // default constructor, if no parameters are passed, the door will be an unlocked wooden door
     public Door(bool isInteractive=true, string name = "Wooden Door", string description = "An Unlocked Wooden Door")
