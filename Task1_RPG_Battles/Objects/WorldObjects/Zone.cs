@@ -1,10 +1,8 @@
-using ADS_A1.Interfaces;
 using ADS_A1.Interfaces.WorldObjects;
-using ADS_A1.objects.Characters;
 
-namespace ADS_A1.objects;
+namespace ADS_A1.Objects.WorldObjects;
 
-public class Zone : INonInteractiveWorldObject
+public class Zone : IZone
 {
     /// <summary>
     /// This class represents a zone in the game world. A zone is a collection of doors and they are connected to each other
@@ -16,9 +14,9 @@ public class Zone : INonInteractiveWorldObject
     public string Name { get; private set; }
     public string Description { get; private set; }
     
-    public Zone CurrentZone { get; set; }
-    public Zone PreviousZone { get; set; }
-    public Zone NextZone { get; set; }
+    public IZone CurrentZone { get; set; }
+    public IZone PreviousZone { get; set; }
+    public IZone NextZone { get; set; }
     public List<IInteractiveWorldObject> Doors { get; private set; }
     public CharacterContainer ZoneCharacters { get; private set; }
     

@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ADS-A1\ADS-A1.csproj" />
+      <ProjectReference Include="..\Task1_RPG_Battles\Task1_RPG_Battles.csproj" />
     </ItemGroup>
 
 </Project>
