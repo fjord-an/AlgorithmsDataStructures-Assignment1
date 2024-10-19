@@ -28,13 +28,19 @@ public class Character : ICharacter
     // this will be polymorphic, allowing Interface objects to be passed to the character class 
     public virtual Action<IInteractiveWorldObject>? Interact { get; set; }
 
-    public Character(string name, ICharacterAttributes attribute, bool isPlayer=false)
+    public Character(string name, ICharacterAttributes attribute, IZone zone,  bool isPlayer=false)
     {
         Name = name;
         Attribute = attribute;
         Level = 1;
         Health = 100;
         IsPlayer = isPlayer;
+        // the character and zone is pointing to each other, ensuring that the character is in the correct zone
+        // and allowing easier access to the zone the character is in when traversing the game world through teleportation
+        // making a reference to the previous/next zone the character was in, irrespective of the current zone of the world linked list
+        CurrentZone = zone;
+        // add character to the zone when it is created, ensuring consistency in the game world
+        zone?.ZoneCharacters.AddCharacter(this);
     }
 
     public void UpdateCurrentZone(World world)

@@ -23,8 +23,6 @@ namespace ADS_A1
             // introduce and enter a new character name
             Console.WriteLine("Welcome to the Text Adventure!");
             
-            IZone startingZone = new Zone("Haven", "A vast open field with a clear sky.");
-            _world = new World(startingZone);
 
             // must set the config path first before loading or generating one
             // TODO consider moving this to Config.cs as it is a configuration setting
@@ -33,15 +31,18 @@ namespace ADS_A1
             // Create the character config JSON file if it does not exist with default values.
             // TODO is name necassary? change the paramater to get from the character object, also the isPlayer value
             // TODO need a cleaner way to create the default configs for each character in Config.cs
-            Config.NewConfig(ConfigPath, new Warrior("Warrior", new WarriorAttributesBuilder().Build(), false));
-            Config.NewConfig(ConfigPath, new Mage("Mage", new MageAttributesBuilder().Build(), false));
-            Config.NewConfig(ConfigPath, new Paladin("Paladin", new PaladinAttributesBuilder().Build(), false));
+            Config.NewConfig(ConfigPath, new Warrior("Warrior", new WarriorAttributesBuilder().Build(), zone:null, isPlayer:false));
+            Config.NewConfig(ConfigPath, new Mage("Mage", new MageAttributesBuilder().Build(), zone:null, isPlayer:false));
+            Config.NewConfig(ConfigPath, new Paladin("Paladin", new PaladinAttributesBuilder().Build(), zone:null, isPlayer:false));
 
+            IZone startingZone = new Zone("Haven", "A vast open field with a clear sky.");
+            _world = new World(startingZone);
+            
             // Prompt the user to create a character
-            Character player = CreateCharacterPrompt.Prompt();
+            Character player = CreateCharacterPrompt.Prompt(startingZone);
             _world.SetPlayersCurrentZone(startingZone, player);
             
-            Console.WriteLine($"Welcome {player.Name}! You set out on your adventure. before you is a vast world of mystery and danger! to traverse this world, enter the following commands:");
+            Console.WriteLine($"Welcome {player.Name}! You set out on your adventure. before you is a vast world of mystery and danger! \nTo traverse this world, enter the following commands:");
             
             while (_input != "q")
             {
@@ -52,48 +53,46 @@ namespace ADS_A1
                 Console.ResetColor();
 
                 // Get the players current zone in each iteration of the loop to use for commands. That way only one search is needed 
-                player.UpdateCurrentZone(_world);
+                // TODO revise the relevancy of this function, as it is possibly redundant
+                // player.UpdateCurrentZone(_world);
 
                 switch (_input)
                 {
                     case "n":
-                        // Add a new zone to the world and move the player to it
-                        IZone newZone = new Zone(NameGenerator.ZoneName(new Random().Next(3, 12)),
-                            NameGenerator.ZoneDescription());
-
+                        IZone nextZone;
+                        // check if the next zone needs to be generated or if it
+                        // already exists from the player's current zone
+                        if (player.CurrentZone.NextZone is null)
+                        {
+                            nextZone = new Zone(NameGenerator.ZoneName(new Random().Next(3, 12)),
+                                NameGenerator.ZoneDescription());
+                            
+                            // spawn random enemies for the new zone (negative values give extra chances for no enemies)
+                            var enemyCount = new Random().Next(-3, 5);
+                            for (int i = 0; i <= enemyCount; i++)
+                            {
+                                Character enemy = Create.NewCharacter(NameGenerator.ZoneName(new Random().Next(2, 9)), "Warrior", nextZone, isPlayer: false);
+                                nextZone.ZoneCharacters.AddCharacter(enemy);
+                            }
+                        }
+                        else
+                        {
+                            nextZone = player.CurrentZone.NextZone;
+                        }
+                        
                         // Add the new zone to the world and move the player to it with the containsPlayer flag
                         // This will increase the performance of the game as it will not have to search for the player in the world
                         // The player object is also passed to the function to add the player to the new zone if the containsPlayer flag is set to true
                         // TODO SetZone method that adds new zone if next zone is null, currently the zone is added to the end of the list
-                        _world.SetPlayersCurrentZone(newZone, player);
+                        _world.SetPlayersCurrentZone(nextZone, player);
                         // _world.AddZone(newZone, containsPlayer: true, player);
 
                         // give the player a message that they have moved and introduce the new zone
-                        if (!newZone.ZoneCharacters.GetCharacters().Contains(player))
+                        // TODO possible performance impact:
+                        if (!nextZone.ZoneCharacters.GetCharacters().Contains(player))
                             Console.WriteLine("Error! Could not add player to the new zone.");
                         // TODO remove the new zone if the player could not be added
 
-                        // spawn random enemies in the new zone
-                        var enemyCount = new Random().Next(-2, 5);
-                        for (int i = 0; i <= enemyCount; i++)
-                        {
-                            newZone.ZoneCharacters.AddCharacter(
-                                new Warrior(
-                                    NameGenerator.ZoneName(new Random().Next(2, 9)),
-                                    new WarriorAttributesBuilder()
-                                        .SetAttack(new Random().Next(10, 30))
-                                        .SetDefense(new Random().Next(10, 30))
-                                        .SetSpeed(new Random().Next(10, 30))
-                                        .SetHealth(new Random().Next(50, 150))
-                                        .SetMaxHealth(new Random().Next(50, 150))
-                                        .SetExperience(0)
-                                        .SetGold(new Random().Next(0, 80))
-                                        .SetLevel(1)
-                                        .SetExperienceToNextLevel(100)
-                                        .Build()
-                                )
-                            );
-                        }
 
                         break;
                     case "b":

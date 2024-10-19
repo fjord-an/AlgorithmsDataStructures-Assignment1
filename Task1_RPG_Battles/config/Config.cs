@@ -69,7 +69,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build(), false
+                        .Build(), null, false
                     ));
                     break;
                 case Warrior:
@@ -85,7 +85,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build(), false
+                        .Build(), null, false
                     ));
                     break;
                 case Mage:
@@ -102,7 +102,7 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build(), false
+                        .Build(), null, false
                     ));
                     break;
             }

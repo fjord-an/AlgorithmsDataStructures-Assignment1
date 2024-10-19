@@ -35,7 +35,21 @@ public class World
         }
         return null;
     }
-
+    public IZone FindZone(IZone zone)
+    {
+        IZone current = _startingZone;
+        
+        while(current is not null)
+        {
+            if (current == zone)
+            {
+                return current;
+            }
+            current = current.NextZone;
+        }
+        return null;
+    }
+    
     public IZone GetPlayersCurrentZone(Character player)
     {
         return player.CurrentZone;
@@ -44,14 +58,34 @@ public class World
     public void SetPlayersCurrentZone(IZone zone, Character player)
     {        
         // remove the player from the previous zone before adding the player to the new zone
-        if (player.CurrentZone != null)
-        {
-            player.CurrentZone.ZoneCharacters.RemoveCharacter(player);
-        }
-
-        zone.ZoneCharacters.AddCharacter(player);
+        // reassign both the player's current zone and the zone's character list
+        player.CurrentZone?.ZoneCharacters.RemoveCharacter(player);
         player.CurrentZone = zone;
+        // TODO following field may be redundant: consider removing it
         PlayersCurrentZone = zone;
+        zone.ZoneCharacters.AddCharacter(player);
+        // if the world is not initialized, set the starting zone to the new zone 
+        player.CurrentZone ??= _startingZone;
+        
+        // if the player is in the last zone, going to an unexplored zone,
+        // update the last zone to the newly generated zone:
+        if(zone.NextZone is null)
+            // check if the next zone is null first as the FindZone method is
+            // an expensive operation which should be avoided if possible
+            if(FindZone(zone) is null)
+            // this method will ensure that the tail of the linked list is updated
+            // only if the zone is not already in the linked list. the first null check 
+            // can be undesirably passed if the user goes back and forth near the end of the linked list
+            {
+                // add zone pointers to the new zone to add it to the World linked list
+                _lastZone.NextZone = zone;
+                zone.PreviousZone = _lastZone;
+                zone.NextZone = null;
+                
+                // update the last zone to the new zone and the player's current zone
+                _lastZone = zone;
+            }
+        
     }
     
     public void AddZone(IZone zone, bool containsPlayer=false, Character player=null!)

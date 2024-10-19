@@ -1,11 +1,13 @@
+using ADS_A1.Interfaces.WorldObjects;
 using ADS_A1.objects.Characters;
 
 namespace ADS_A1.functions.prompt;
 
 public class CreateCharacterPrompt
 {
-    public static Character Prompt()
+    public static Character Prompt(IZone zone)
     {
+        // pass in the zone to create the character in (starting zone for the player)
         Console.WriteLine("Please choose a character name: ");
         string characterName = Console.ReadLine();
         
@@ -33,7 +35,7 @@ public class CreateCharacterPrompt
             }
         } while (!archetypeList.Contains(classSelection));
 
-        Character player = Create.NewCharacter(characterName, classSelection, isPlayer: true);
+        Character player = Create.NewCharacter(characterName, classSelection, zone, isPlayer: true);
 
         return player;
     }
