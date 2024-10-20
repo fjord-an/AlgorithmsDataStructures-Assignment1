@@ -46,7 +46,7 @@ public class Warrior : Character
                 break;
             case < 15:
                 BasicAttack(target);
-                Attribute.Rage += 5;
+                Attribute.Rage += 10;
                 break;
             
         }
@@ -59,14 +59,16 @@ public class Warrior : Character
         // performing a transformation on the Health property of the target object
         // which is encapsulated in the attribute class, limiting the modification
         // and performing all associated logic in the attribute class only!
-        target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
+        Console.Write(" Heavy Swing, ");
+        target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(600 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
     }
     
     public void Execute(ICharacter target)
     {
+        Console.Write(" Execute, ");
         // high damage ability that can only be used when the target is below 30% health
         if (target.Health < 30)
-            target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(800 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
+            target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(3000 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
         else
         {
             Console.WriteLine("Target is not below 30% health");

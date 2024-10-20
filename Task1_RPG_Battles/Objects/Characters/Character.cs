@@ -44,7 +44,8 @@ public class Character : ICharacter
         CurrentZone = zone;
         // add character to the zone when it is created, ensuring consistency in the game world
         zone?.ZoneCharacters.AddCharacter(this);
-        SetAttributeName(name);
+        SetAttributeName(Name);
+        IsAlive();
     }
     
     
@@ -61,18 +62,34 @@ public class Character : ICharacter
     // check if the character is alive by checking if the health is above 0 in the character attributes
     public bool IsAlive()
     {
-        if (Attribute.IsAlive)
+        if (Attribute != null)
         {
-            Alive = true;
-            return true;
+            if (Attribute.IsAlive)
+            {
+                Alive = true;
+                return true;
+            }
+            
+            Alive = false;
+            return false;
         }
-        Alive = false;
+
         return false;
     }
 
     public void TakeDamage(int damage) => Attribute.SetHealth((-1 * damage));
-    
-    public void SetHealth(double multiplier) => Attribute.SetHealth(multiplier);
+
+    public void SetHealth(double multiplier)
+    {
+        Attribute.SetHealth(multiplier);
+        // print the Name of the character inflicted with damage
+        
+        Console.Write($"|{Name} | HP: {Health}/{Attribute.MaxHealth} | ");
+        Console.WriteLine();
+        
+        // Console colour must be reset here as it is the end of the rounds line
+        Console.ResetColor();
+    }
     
     public void FindCurrentZone(World world)
     {
@@ -83,8 +100,9 @@ public class Character : ICharacter
     // by -1, so that the damage is subtracted from the health of the target
     public void BasicAttack(ICharacter target)
     {
+        Console.Write(" used Basic Attack, ");
         // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 
-        target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(8 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
+        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(200 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
     }
     
     public virtual void DoAction(ICharacter target)

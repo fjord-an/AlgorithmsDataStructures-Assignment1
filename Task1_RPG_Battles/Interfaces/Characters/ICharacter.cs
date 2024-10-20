@@ -16,7 +16,7 @@ public interface ICharacter
     public Action<IInteractiveWorldObject>? Interact { get; set; }
     public double Health => Attribute.Health;
     
-    public virtual void DoAction(ICharacter target)
+    public void DoAction(ICharacter target)
     {
         BasicAttack(target);
     }

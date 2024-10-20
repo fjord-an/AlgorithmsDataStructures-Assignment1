@@ -117,7 +117,7 @@ public class Config
     {
         // This method will create the Character Stats Configuration file to a default state.
         // Create a dictionary to hold the characters and their stats
-        Dictionary<string, Dictionary<string, int>> charactersConfig;
+        Dictionary<string, Dictionary<string, double>> charactersConfig;
         
 
         // Check if file exists and read existing content
@@ -128,13 +128,13 @@ public class Config
             // enumerate a dictionary of characters from the JSON file to check for duplicates
             // This ternary operation deserializes (parses) existing JSON content to a dictionary (from a string),
             // else if the file is not found, return an empty (nested) dictionary instead
-            charactersConfig = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, int>>>(existingJson)
-                               ?? new Dictionary<string, Dictionary<string, int>>();
+            charactersConfig = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, double>>>(existingJson)
+                               ?? new Dictionary<string, Dictionary<string, double>>();
         }
         else
         {
             // if file doesn't exist create a new Dictionary instance to write to a JSON with the Character stats 
-            charactersConfig = new Dictionary<string, Dictionary<string, int>>();
+            charactersConfig = new Dictionary<string, Dictionary<string, double>>();
         }
 
             // checking for duplicate characters:

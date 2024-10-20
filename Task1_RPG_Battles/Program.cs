@@ -66,7 +66,7 @@ namespace ADS_A1
                             var enemyCount = new Random().Next(-3, 5);
                             for (int i = 0; i <= enemyCount; i++)
                             {
-                                Character enemy = Create.NewCharacter(NameGenerator.ZoneName(new Random().Next(2, 9)), "Warrior", nextZone, isPlayer: false);
+                                Character enemy = Create.NewCharacter(NameGenerator.ZoneName(new Random().Next(2, 9)), "Warrior", nextZone, player.Level,isPlayer: false);
                                 nextZone.ZoneCharacters.AddCharacter(enemy);
                             }
                         }
@@ -115,63 +115,72 @@ namespace ADS_A1
                 // playersCurrentZone = _world.PlayersCurrentZone;
                 Console.WriteLine($"You are in {player.CurrentZone.Name}, a {player.CurrentZone.Description}");
 
-                // Store the characters in the zone in an IEnumerable to filter them
-                IEnumerable<Character> zoneCharacters = player.CurrentZone.ZoneCharacters.GetCharacters();
-                // to get the enemies in the zone, filter the characters that are not a player. Store the filtered characters in an array
-                // to avoid multiple iterations of the IEnumerable when counting the enemies, increasing performance
-                Character[] enemies = zoneCharacters.Where(c => !c.IsPlayer).ToArray();
-                if (enemies.Any())
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    // if there are enemies in the zone, print the number of enemies and their names. using the ternary operator to
-                    // print the correct plural form
-                    Console.WriteLine(enemies.Count() == 1
-                        ? $"You encounter {enemies.Count()} enemy in this zone."
-                        : $"You encounter {enemies.Count()} enemies in this zone.");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    // if there are no enemies in the zone, print a message
-                    Random sounds = new Random();
-                    switch (sounds.Next(1, 6))
-                    {
-                        case 1:
-                            if (player.CurrentZone.Name.Contains("Forest"))
-                                Console.WriteLine("You hear the sound of rustling leaves.");
-                            else
-                                Console.WriteLine("You hear the sound of a distant waterfall.");
-                            break;
-                        case 2:
-                            Console.WriteLine("You hear the sound of a bird chirping.");
-                            break;
-                        case 3:
-                            Console.WriteLine("You hear the sound of a distant wind.");
-                            break;
-                        case 4:
-                            Console.WriteLine("You hear nothing but the sound of your own footsteps.");
-                            break;
-                        case 5:
-                            Console.WriteLine("You hear the scurrying of unknown creatures.");
-                            break;
-                        default:
-                            Console.WriteLine("You are in a quiet place.");
-                            break;
-                    }
-                }
-
-                foreach (var character in enemies)
-                {
-                    if (character.IsPlayer)
-                        continue;
-
-                    string tabSpacing = character.Name.Length > 4 ? "\t" : "\t\t";
-                    Console.Write(
-                        $"| {character.Name} {tabSpacing} : Level {character.Level} {character.GetType().Name} ");
-                    Console.WriteLine($"| HP: {character.Health}/{character.Attribute.MaxHealth} |");
-                }
-
-                Console.WriteLine("");
+                // #####################
+                // // Store the characters in the zone in an IEnumerable to filter them
+                // IEnumerable<Character> zoneCharacters = player.CurrentZone.ZoneCharacters.GetCharacters();
+                // // to get the enemies in the zone, filter the characters that are not a player. Store the filtered characters in an array
+                // // to avoid multiple iterations of the IEnumerable when counting the enemies, increasing performance
+                // Character[] enemies = zoneCharacters.Where(c => !c.IsPlayer).ToArray();
+                // if (enemies.Any())
+                // {
+                //     Console.ForegroundColor = ConsoleColor.Red;
+                //     // if there are enemies in the zone, print the number of enemies and their names. using the ternary operator to
+                //     // print the correct plural form
+                //     Console.WriteLine(enemies.Count() == 1
+                //         ? $"You encounter {enemies.Count()} enemy in this zone."
+                //         : $"You encounter {enemies.Count()} enemies in this zone.");
+                //     Console.ResetColor();
+                // }
+                // else
+                // {
+                //     // if there are no enemies in the zone, print a message
+                //     Random sounds = new Random();
+                //     switch (sounds.Next(1, 6))
+                //     {
+                //         case 1:
+                //             if (player.CurrentZone.Name.Contains("Forest"))
+                //                 Console.WriteLine("You hear the sound of rustling leaves.");
+                //             else
+                //                 Console.WriteLine("You hear the sound of a distant waterfall.");
+                //             break;
+                //         case 2:
+                //             Console.WriteLine("You hear the sound of a bird chirping.");
+                //             break;
+                //         case 3:
+                //             Console.WriteLine("You hear the sound of a distant wind.");
+                //             break;
+                //         case 4:
+                //             Console.WriteLine("You hear nothing but the sound of your own footsteps.");
+                //             break;
+                //         case 5:
+                //             Console.WriteLine("You hear the scurrying of unknown creatures.");
+                //             break;
+                //         default:
+                //             Console.WriteLine("You are in a quiet place.");
+                //             break;
+                //     }
+                // }
+                //
+                // foreach (var character in enemies)
+                // {
+                //     if (character.IsPlayer)
+                //         continue;
+                //
+                //     string tabSpacing = character.Name.Length > 4 ? "\t" : "\t\t";
+                //     Console.Write(
+                //         $"| {character.Name} {tabSpacing} : Level {character.Level} {character.GetType().Name} ");
+                //     Console.WriteLine($"| HP: {character.Health}/{character.Attribute.MaxHealth} |");
+                // }
+                //
+                // Console.ForegroundColor = ConsoleColor.Green;
+                // string tabSpacingPlayer = player.Name.Length > 4 ? "\t" : "\t\t";
+                // Console.Write(
+                //     $"| {player.Name} {tabSpacingPlayer} : Level {player.Level} {player.GetType().Name} ");
+                // Console.WriteLine($"| HP: {player.Health}/{player.Attribute.MaxHealth} |");
+                // Console.ResetColor();
+                //
+                // Console.WriteLine("");
+                // #####################
             }
         }
     }

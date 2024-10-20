@@ -48,9 +48,9 @@ public static class Stats
         }
     }
     
-    public static Dictionary<string, int> ConvertStatsToDictionary(Character character)
+    public static Dictionary<string, double> ConvertStatsToDictionary(Character character)
     {
-        Dictionary<string, int> dict = new();
+        Dictionary<string, double> dict = new();
 
         foreach (var a in character.Attribute.GetType().GetProperties())
         {
@@ -60,7 +60,7 @@ public static class Stats
             if (a.Name == "Name") continue;
             
             var value = a.GetValue(character.Attribute);
-            dict.Add(a.Name, value is null ? 0 : (int)value);
+            dict.Add(a.Name, value is null ? 0 : (double)value);
         }
 
         return dict;

@@ -13,22 +13,27 @@ public class Paladin : Warrior
     // therefore, in this situation, the Attribute property must be hidden using the new keyword
     // i believe that this is generally a bad practice, however in this situation, it is necessary
     // because the requirements of the game require that the Paladin class inherit from Warrior
-    public IPaladinAttributes PaladinAttribute { get; }
+    public IPaladinAttributes Attribute { get; }
     
     public Paladin(string name, ICharacterAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone, isPlayer)
     {
         // Attribute property must be cast to the correct type of attributes.
         // A new property is created to store the Paladin attributes in conjunction
         // with the inherited Warrior attributes
-        PaladinAttribute = (IPaladinAttributes)stats;
+        Attribute = (IPaladinAttributes)stats;
     }
 
     private double HealCost { get; set; } = 25;
 
     private void Heal(ICharacter target)
     {
-        if(PaladinAttribute.Mana > HealCost)
-            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(100 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level));
+        if (Attribute.Mana >= HealCost)
+        {
+            Attribute.Mana -= HealCost;
+            Console.WriteLine(" Heal on " + target.Name);
+            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(100 * Level) - Math.Sqrt(2 * Level)) +
+                             Math.Sqrt(2 * Level));
+        }
         else
             Console.WriteLine("Not enough mana to heal");
     }
@@ -41,7 +46,7 @@ public class Paladin : Warrior
         // Paladins have the ability to heal themselves and their allies
         // so I have implemented a simple switch statement to choose the spell based
         // on the health of the target
-        var mana = PaladinAttribute.Mana;
+        var mana = Attribute.Mana;
         
         switch (target)
         {

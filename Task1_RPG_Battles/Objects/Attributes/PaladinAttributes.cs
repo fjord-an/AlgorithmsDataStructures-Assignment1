@@ -6,8 +6,8 @@ namespace ADS_A1.objects.Attributes;
 
 public class PaladinAttributes : CharacterAttributes, IPaladinAttributes
 {
-    public double Mana { get; }
-    public double MaxMana { get; }
+    public double Mana { get; set; }
+    public double MaxMana { get; set; }
     // future Paladin ability resource:
     public int HolyPower { get; }
 

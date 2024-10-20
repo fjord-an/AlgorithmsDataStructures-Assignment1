@@ -1,3 +1,4 @@
+using System.Net.Security;
 using ADS_A1.Interfaces.WorldObjects;
 using ADS_A1.objects.Characters;
 
@@ -35,7 +36,7 @@ public static class CreateCharacterPrompt
             }
         } while (!archetypeList.Contains(classSelection));
 
-        Character player = Create.NewCharacter(characterName, classSelection, zone, isPlayer: true);
+        Character player = Create.NewCharacter(characterName, classSelection, zone, level:1, isPlayer: true);
 
         return player;
     }

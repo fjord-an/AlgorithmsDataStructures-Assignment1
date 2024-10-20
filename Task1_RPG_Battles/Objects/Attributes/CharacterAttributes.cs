@@ -14,7 +14,7 @@ public class CharacterAttributes : ICharacterAttributes
     public string Name { get; set; }
     public double Health { get; private set; }
     public double MaxHealth { get; private set; }
-    public double Attack { get; private set; }
+    public double Attack { get; set; }
     public double Defense { get; private set; }
     public double Speed { get; private set; }
     public int Level { get; private set; }
@@ -36,6 +36,7 @@ public class CharacterAttributes : ICharacterAttributes
         // to maintain simplicity, i only made a builder for the base CharacterAttributes object
         // TODO add reference of builder object and using them
         Health = builder.Health;
+        MaxHealth = builder.MaxHealth;
         Attack = builder.Attack;
         Defense = builder.Defense;
         Speed = builder.Speed;
@@ -58,16 +59,17 @@ public class CharacterAttributes : ICharacterAttributes
             Health = 0;
         }
         if(healthChange < 0)
-            Console.WriteLine($"Inflicted {healthChange} Damage to {Name}");
+            Console.Write($"Inflicting {-1 * (int)healthChange} Damage to ");
     }
     public void Heal(double heal) => Health += heal;
     public void GainGold(double gold) => Gold += gold;
     
-    public void LevelUp()
+    public void LevelUp(int level = 1)
     {
-        Level++;
+        Level+= level;
         Experience = 0;
         ExperienceToNextLevel *= 2;
+        Console.WriteLine($"{Name} has leveled up to level {Level}");
     }
 
     public void GainExperience(double experience)

@@ -40,7 +40,7 @@ public static class Create
         _archetypes = _config.RootElement;
     }
 
-    public static Character NewCharacter(string name, string characterType, IZone zone, bool isPlayer = false)
+    public static Character NewCharacter(string name, string characterType, IZone zone, int level, bool isPlayer = false)
     {
         while (_config is null)
             //check if the value type of config object is null, meaning it does not exist. the is keyword must be used
@@ -64,7 +64,7 @@ public static class Create
         // to a factory method that will create the character based on the type and stats in the JSON file
         // use of the factory method allows for easy extension of the game with new character types
         // seperating concerns.
-        return CharacterFactory.CreateCharacter(name, characterType, _archetypes, zone, isPlayer);
+        return CharacterFactory.CreateCharacter(name, characterType, _archetypes, zone, level, isPlayer);
           // by using builders, i can efficiently add and update stats at whim, while maintatin data integrity
         // of the Attribute objects themselves
         }

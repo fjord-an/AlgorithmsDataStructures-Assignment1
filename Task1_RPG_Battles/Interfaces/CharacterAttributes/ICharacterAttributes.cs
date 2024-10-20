@@ -7,7 +7,7 @@ public interface ICharacterAttributes
     double Health { get; }
     
     double MaxHealth { get; }
-    double Attack { get; }
+    double Attack { get; set; }
     double Defense { get; }
     double Speed { get; }
     public int Level { get; }
@@ -16,7 +16,7 @@ public interface ICharacterAttributes
     public double Gold { get; }
     public bool IsAlive { get; }
 
-    public void LevelUp();
+    public void LevelUp(int level);
 
     public void GainExperience(double experience);
 

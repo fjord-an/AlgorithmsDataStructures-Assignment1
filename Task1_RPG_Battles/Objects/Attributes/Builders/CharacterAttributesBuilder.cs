@@ -80,6 +80,7 @@ public class CharacterAttributesBuilder
     public CharacterAttributesBuilder FromCharacterAttributes(ICharacterAttributes attributes)
     {
         _health = attributes.Health;
+        _maxHealth = attributes.MaxHealth;
         _attack = attributes.Attack;
         _defense = attributes.Defense;
         _speed = attributes.Speed;
@@ -104,6 +105,8 @@ public class CharacterAttributesBuilder
     // madoubleaining data doubleegrity of this object
     // TODO add a refernce=> further research of builder functions and this implmenetation
     public double Health => _health;
+    
+    public double MaxHealth => _maxHealth;
     public double Attack => _attack;
     public double Defense => _defense;
     public double Speed => _speed;
