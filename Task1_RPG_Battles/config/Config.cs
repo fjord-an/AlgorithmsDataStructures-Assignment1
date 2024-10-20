@@ -16,8 +16,7 @@ public class Config
     // rather then set in the code which will make the game less maintainable
     public static JsonDocument LoadConfig(string path)
     // Return a JsonDocument object, which is a representation of the JSON file which can be
-    // TODO is this a valid statement about data structures?
-    // used to access the data in the JSON file as an object data structure
+    // used to access the data in the JSON file as an object
     {
         
         try //return null with message if there is an error

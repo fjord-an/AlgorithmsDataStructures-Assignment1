@@ -22,15 +22,12 @@ namespace ADS_A1
         {
             // introduce and enter a new character name
             Console.WriteLine("Welcome to the Text Adventure!");
-            
 
             // must set the config path first before loading or generating one
             // TODO consider moving this to Config.cs as it is a configuration setting
             Create.SetConfigPath(ConfigPath);
 
             // Create the character config JSON file if it does not exist with default values.
-            // TODO is name necassary? change the paramater to get from the character object, also the isPlayer value
-            // TODO need a cleaner way to create the default configs for each character in Config.cs
             Config.NewConfig(ConfigPath, new Warrior("Warrior", new WarriorAttributesBuilder().Build(), zone:null, isPlayer:false));
             Config.NewConfig(ConfigPath, new Mage("Mage", new MageAttributesBuilder().Build(), zone:null, isPlayer:false));
             Config.NewConfig(ConfigPath, new Paladin("Paladin", new PaladinAttributesBuilder().Build(), zone:null, isPlayer:false));
@@ -53,8 +50,6 @@ namespace ADS_A1
                 Console.ResetColor();
 
                 // Get the players current zone in each iteration of the loop to use for commands. That way only one search is needed 
-                // TODO revise the relevancy of this function, as it is possibly redundant
-                // player.UpdateCurrentZone(_world);
 
                 switch (_input)
                 {
@@ -83,7 +78,6 @@ namespace ADS_A1
                         // Add the new zone to the world and move the player to it with the containsPlayer flag
                         // This will increase the performance of the game as it will not have to search for the player in the world
                         // The player object is also passed to the function to add the player to the new zone if the containsPlayer flag is set to true
-                        // TODO SetZone method that adds new zone if next zone is null, currently the zone is added to the end of the list
                         _world.SetPlayersCurrentZone(nextZone, player);
                         // _world.AddZone(newZone, containsPlayer: true, player);
 
@@ -91,14 +85,13 @@ namespace ADS_A1
                         // TODO possible performance impact:
                         if (!nextZone.ZoneCharacters.GetCharacters().Contains(player))
                             Console.WriteLine("Error! Could not add player to the new zone.");
-                        // TODO remove the new zone if the player could not be added
-
-
+                        
+                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters());
                         break;
                     case "b":
                         // Move the player back to the previous zone
-                        // TODO implement: move the player back to the previous zone
                         _world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
+                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters());
                         break;
                     case "z":
                         // Show the player where they are
@@ -111,12 +104,10 @@ namespace ADS_A1
                         break;
                     case "s":
                         // Show the player's stats if they type 'stats'. Can pass any character object to the function.
-                        // TODO implement: pass a target character object to the function to show their stats by prompting the user to type the character name.
                         Stats.Show(player);
                         break;
                 }
                 
-                // TODO find the player in the world with the containsPlayer flag instead of searching for the player in the worlds zones
                 // Get the players current zone in each iteration of the loop to check if the player has moved zones
                 // playersCurrentZone = player.CurrentZone;
 

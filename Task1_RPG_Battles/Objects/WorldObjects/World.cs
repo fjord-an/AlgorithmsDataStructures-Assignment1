@@ -61,7 +61,6 @@ public class World
         // reassign both the player's current zone and the zone's character list
         player.CurrentZone?.ZoneCharacters.RemoveCharacter(player);
         player.CurrentZone = zone;
-        // TODO following field may be redundant: consider removing it
         PlayersCurrentZone = zone;
         zone.ZoneCharacters.AddCharacter(player);
         // if the world is not initialized, set the starting zone to the new zone 

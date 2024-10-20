@@ -2,7 +2,7 @@ using ADS_A1.objects.Characters;
 
 public class CharacterContainer
 {
-    private List<Character> _characters = new();
+    private List<Character> _characters { get; } = new();
 
     public void AddCharacter(Character character)
     {

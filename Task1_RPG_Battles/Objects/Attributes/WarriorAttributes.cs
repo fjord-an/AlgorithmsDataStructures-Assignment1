@@ -9,8 +9,8 @@ public class WarriorAttributes : CharacterAttributes, IWarriorAttributes
 // Inherit the common/generic CharacterAttributes and implement the IWarriorAttributes
 // so that only the interface is exposed to the game
 {
-    public int Rage { get; }
-    public int MaxRage { get; }
+    public int Rage { get; set; }
+    public int MaxRage { get; set; }
     
     public WarriorAttributes(WarriorAttributesBuilder attributes) 
         : base(attributes)

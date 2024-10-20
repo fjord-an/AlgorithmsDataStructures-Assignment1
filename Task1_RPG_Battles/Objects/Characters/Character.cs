@@ -14,14 +14,15 @@ public class Character : ICharacter
     // be easily extended and tested. Considering stats are a very
     // finicky and subjective to change at all times, only the interface is
     // exposed
-    public ICharacterAttributes Attribute { get; set; }
+    public virtual ICharacterAttributes Attribute { get; }
     
-    public double Level { get; set; }
-    public double Health { get; set; }
-    public bool IsAlive { get; set; }
+    public int Level { get; set; }
+    public bool Alive { get; set; }
     public bool IsPlayer { get; private set; }
     public IZone CurrentZone { get; set; }
     
+    public double Health => Attribute.Health;
+
     // using generic action delegate of the .NET framework so that the player can execute generic actions 
     // in the game, which can be passed by the object itself, so that many different objects can easily be added => extensible
     // This will result in a composition relationship between the character class and World objects.
@@ -30,10 +31,12 @@ public class Character : ICharacter
 
     public Character(string name, ICharacterAttributes attribute, IZone zone,  bool isPlayer=false)
     {
+        // Using method to change health, so that the health is encapsulated
+        // in the attribute class and limits modification to the health except
+        // through the attribute class with its own logic
         Name = name;
         Attribute = attribute;
         Level = 1;
-        Health = 100;
         IsPlayer = isPlayer;
         // the character and zone is pointing to each other, ensuring that the character is in the correct zone
         // and allowing easier access to the zone the character is in when traversing the game world through teleportation
@@ -41,17 +44,52 @@ public class Character : ICharacter
         CurrentZone = zone;
         // add character to the zone when it is created, ensuring consistency in the game world
         zone?.ZoneCharacters.AddCharacter(this);
+        SetAttributeName(name);
+    }
+    
+    
+    // I have seperated the logic from character attributes to the character class
+    // All stats are encapsulated there, the character class will access each instances
+    // unique attributes
+
+    private void SetAttributeName(string name)
+    {
+        if(Attribute != null)
+            Attribute.Name = name;
     }
 
-    public void UpdateCurrentZone(World world)
+    // check if the character is alive by checking if the health is above 0 in the character attributes
+    public bool IsAlive()
+    {
+        if (Attribute.IsAlive)
+        {
+            Alive = true;
+            return true;
+        }
+        Alive = false;
+        return false;
+    }
+
+    public void TakeDamage(int damage) => Attribute.SetHealth((-1 * damage));
+    
+    public void SetHealth(double multiplier) => Attribute.SetHealth(multiplier);
+    
+    public void FindCurrentZone(World world)
     {
         CurrentZone = world.FindPlayersCurrentZone(this);
     }
     
-    public void BasicAttack(Character target)
+    // currently, damage multipliers are calculated by multiplying the damage
+    // by -1, so that the damage is subtracted from the health of the target
+    public void BasicAttack(ICharacter target)
     {
         // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 
-        target.Health -= new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level);
+        target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(8 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
     }
-
+    
+    public virtual void DoAction(ICharacter target)
+    {
+        // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 
+        BasicAttack(target);
+    }
 }

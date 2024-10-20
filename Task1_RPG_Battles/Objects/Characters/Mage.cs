@@ -1,29 +1,56 @@
 using ADS_A1.functions;
 using ADS_A1.Interfaces;
 using ADS_A1.Interfaces.CharacterAttributes;
+using ADS_A1.Interfaces.Characters;
 using ADS_A1.Interfaces.WorldObjects;
 using ADS_A1.objects.Attributes;
 using ADS_A1.Objects.WorldObjects;
 
 namespace ADS_A1.objects.Characters;
 
-public class  Mage: Character
+public class Mage : Character
 {
-    //should inherit from character or composition from attributes?
-    public Mage(string name, ICharacterAttributes stats, IZone zone, bool isPlayer=false) : base(name,  stats, zone, isPlayer)
+    public override IMageAttributes Attribute { get; }
+    
+    public Mage(string name, ICharacterAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone,
+        isPlayer)
     {
-        Interact = (IInteractiveWorldObject obj) =>
-        {
-            if (obj is Door door)
-            {
-                door.Activate();
-            }
-        };
+        Attribute = (IMageAttributes) stats;
     }
 
-    public void FireBall(Character target)
+    // different classes of characters will have different attributes:
+
+    public override void DoAction(ICharacter target)
+    {
+        // Mages generally have many spells to choose from, so I have
+        // implemented a simple switch statement to choose the spell based
+        // on the mana available. Mana levels should b managed by setter method like health
+        // in future iterations of the game
+        switch (Attribute.Mana)
+        {
+            case > 20:
+                PyroBlast(target);
+                Attribute.Mana -= 10;
+                break;
+            case > 10:
+                Fireball(target);
+                Attribute.Mana -= 5;
+                break;
+            default:
+                BasicAttack(target);
+                Attribute.Mana += 4;
+                break;
+        }
+    }
+
+    private void PyroBlast(ICharacter target)
     {
         // Attack functions will return void because damage is inflicted by performing a transformation on the Health property of the target object
-        target.Health -= new Random().NextDouble() * (Math.Sqrt(10 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level);
+        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(45 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level));
+    }
+
+    private void Fireball(ICharacter target)
+    {
+        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(19 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level));
     }
 }

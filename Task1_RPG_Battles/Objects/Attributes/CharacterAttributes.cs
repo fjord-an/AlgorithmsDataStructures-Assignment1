@@ -11,16 +11,17 @@ namespace ADS_A1.objects.Attributes;
 // Implementations:
 public class CharacterAttributes : ICharacterAttributes
 {
-    public string Name { get; private set; }
-    public int Health { get; private set; }
-    public int MaxHealth { get; private set; }
-    public int Attack { get; private set; }
-    public int Defense { get; private set; }
-    public int Speed { get; private set; }
+    public string Name { get; set; }
+    public double Health { get; private set; }
+    public double MaxHealth { get; private set; }
+    public double Attack { get; private set; }
+    public double Defense { get; private set; }
+    public double Speed { get; private set; }
     public int Level { get; private set; }
-    public int Experience { get; private set; }
-    public int ExperienceToNextLevel { get; private set; }
-    public int Gold { get; private set; }
+    public double Experience { get; private set; }
+    public double ExperienceToNextLevel { get; private set; }
+    public double Gold { get; private set; }
+    public bool IsAlive => Health > 0;
 
 
     public CharacterAttributes(CharacterAttributesBuilder builder)
@@ -42,7 +43,25 @@ public class CharacterAttributes : ICharacterAttributes
         Experience = builder.Experience;
         ExperienceToNextLevel = builder.ExperienceToNextLevel;
         Gold = builder.Gold;
-    } 
+    }
+
+    public void SetHealth(double multiplier)
+    {
+        double healthChange = multiplier * Math.Sqrt(Level);
+        Health += healthChange;
+        if (Health > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+        if (Health <= 0)
+        {
+            Health = 0;
+        }
+        if(healthChange < 0)
+            Console.WriteLine($"Inflicted {healthChange} Damage to {Name}");
+    }
+    public void Heal(double heal) => Health += heal;
+    public void GainGold(double gold) => Gold += gold;
     
     public void LevelUp()
     {
@@ -51,7 +70,7 @@ public class CharacterAttributes : ICharacterAttributes
         ExperienceToNextLevel *= 2;
     }
 
-    public void GainExperience(int experience)
+    public void GainExperience(double experience)
     {
         Experience += experience;
         if (Experience >= ExperienceToNextLevel)
@@ -59,16 +78,4 @@ public class CharacterAttributes : ICharacterAttributes
             LevelUp();
         }
     }
-
-    public void GainGold(int gold)
-    {
-        Gold += gold;
-    }
-
-    public void TakeDamage(int damage)
-    {
-        Health -= damage;
-    }
-
-
 }
