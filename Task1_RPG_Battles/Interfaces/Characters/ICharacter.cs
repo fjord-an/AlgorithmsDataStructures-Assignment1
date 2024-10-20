@@ -9,7 +9,7 @@ public interface ICharacter
 {
     public String Name { get; set; }
     public ICharacterAttributes Attribute { get; }
-    public int Level { get; set; }
+    public double Level { get; set; }
     public bool Alive { get; set; }
     public bool IsPlayer { get; }
     public IZone CurrentZone { get; set; }

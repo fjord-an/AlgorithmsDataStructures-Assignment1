@@ -1,4 +1,5 @@
 using System.ComponentModel.Design;
+using ADS_A1.Interfaces.Characters;
 using ADS_A1.Interfaces.WorldObjects;
 using ADS_A1.objects.Characters;
 
@@ -55,7 +56,7 @@ public class World
         return player.CurrentZone;
     }
     
-    public void SetPlayersCurrentZone(IZone zone, Character player)
+    public void SetPlayersCurrentZone(IZone zone, ICharacter player)
     {        
         // remove the player from the previous zone before adding the player to the new zone
         // reassign both the player's current zone and the zone's character list

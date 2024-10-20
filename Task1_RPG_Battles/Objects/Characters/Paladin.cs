@@ -13,15 +13,16 @@ public class Paladin : Warrior
     // therefore, in this situation, the Attribute property must be hidden using the new keyword
     // i believe that this is generally a bad practice, however in this situation, it is necessary
     // because the requirements of the game require that the Paladin class inherit from Warrior
-    public IPaladinAttributes Attribute { get; }
+    public new IPaladinAttributes Attribute { get; }
     
-    public Paladin(string name, ICharacterAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone, isPlayer)
+    public Paladin(string name, IPaladinAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone, isPlayer)
     {
         // Attribute property must be cast to the correct type of attributes.
         // A new property is created to store the Paladin attributes in conjunction
         // with the inherited Warrior attributes
         Attribute = (IPaladinAttributes)stats;
     }
+
 
     private double HealCost { get; set; } = 25;
 

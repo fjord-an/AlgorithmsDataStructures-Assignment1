@@ -5,25 +5,26 @@ namespace ADS_A1.objects.Attributes.builders;
 
 public class MageAttributesBuilder : CharacterAttributesBuilder
 {
-    private int _mana;
-    private int _maxMana;
-    private int _runes;
+    public double Mana { get; set; }
+    public double MaxMana {get; set; }
 
-    public MageAttributesBuilder SetMana(int mana)
+    public double Runes { get; set; }
+
+    public MageAttributesBuilder SetMana(double  mana)
     {
-        _mana= mana;
+        Mana= mana;
         return this;
     }
 
-    public MageAttributesBuilder SetMaxMana(int maxMana)
+    public MageAttributesBuilder SetMaxMana(double maxMana)
     {
-        _maxMana = maxMana;
+        MaxMana = maxMana;
         return this;
     }
 
-    public MageAttributesBuilder SetRunes(int runes)
+    public MageAttributesBuilder SetRunes(double  runes)
     {
-        _runes = runes;
+        Runes = runes;
         return this;
     }
     
@@ -31,8 +32,4 @@ public class MageAttributesBuilder : CharacterAttributesBuilder
     {
         return new MageAttributes(this);
     }
-
-    public int Mana => _mana;
-    public int MaxMana => _maxMana;
-    public int Runes => _runes;
 }

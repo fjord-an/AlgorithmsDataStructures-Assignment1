@@ -29,7 +29,7 @@ namespace Tests
             );
 
             // Act
-            Dictionary<string, int> result = Stats.ConvertStatsToDictionary(character);
+            Dictionary<string, double> result = Stats.ConvertStatsToDictionary(character);
 
             // Assert
             Assert.AreEqual(10, result["Health"]);

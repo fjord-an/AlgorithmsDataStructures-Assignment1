@@ -26,21 +26,26 @@ public static class Create
     // get the 'RootElement' of the JSON doc, which holds the Key-Value pairs for the object
     private static JsonElement _archetypes;
 
-    public static void SetConfigPath(string path=".")
+    public static void SetConfigPath(string path="CharacterConfig.json")
     // default value assigned to executable root directory (.) if not passed
-    // TODO review complexity and coupling of this method: consider moving to Config.cs
     {
         _jsonPath = path;
-        _config = Config.LoadConfig(_jsonPath);
-        
-        // if the config file does not exist, create a new one with default values to avoid errors at character creation before initialising the config Document
-        if(_config is null)
-            Config.AppendConfig(_jsonPath, new Character("DefaultCharacter", new CharacterAttributesBuilder().Build(), null, false));
-        // load the config file if exists
-        _archetypes = _config.RootElement;
+
+        if (File.Exists(path))
+        {
+            // load the config file if exists
+            _config = Config.LoadConfig(_jsonPath);
+            _archetypes = _config.RootElement;
+        }
+        else
+        {
+            // if the config file does not exist, create a new one with default values to avoid errors at character creation before initialising the config Document
+            Config.AppendConfig(_jsonPath,
+                new Character("DefaultCharacter", new CharacterAttributesBuilder().Build(), null, false));
+        }
     }
 
-    public static Character NewCharacter(string name, string characterType, IZone zone, int level, bool isPlayer = false)
+    public static Character NewCharacter(string name, string characterType, IZone zone, double level, bool isPlayer = false)
     {
         while (_config is null)
             //check if the value type of config object is null, meaning it does not exist. the is keyword must be used

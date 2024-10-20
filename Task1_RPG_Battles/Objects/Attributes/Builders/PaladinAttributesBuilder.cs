@@ -3,27 +3,30 @@ using ADS_A1.Interfaces.CharacterAttributes;
 
 namespace ADS_A1.objects.Attributes.builders;
 
-public class PaladinAttributesBuilder : CharacterAttributesBuilder
+public class PaladinAttributesBuilder : WarriorAttributesBuilder
 {
-    private int _mana;
-    private int _maxMana;
-    private int _holyPower;
+    public double Mana { get; private set; }
 
-    public PaladinAttributesBuilder SetMana(int mana)
+    public double MaxMana { get; private set; }
+
+    public double HolyPower { get; private set; }
+    
+    
+    public PaladinAttributesBuilder SetMana(double mana)
     {
-        _mana = mana;
+        Mana = mana;
         return this;
     }
 
-    public PaladinAttributesBuilder SetMaxMana(int maxMana)
+    public PaladinAttributesBuilder SetMaxMana(double maxMana)
     {
-        _maxMana = maxMana;
+        MaxMana = maxMana;
         return this;
     }
 
-    public PaladinAttributesBuilder SetHolyPower(int holyPower) 
+    public PaladinAttributesBuilder SetHolyPower(double holyPower) 
     {
-        _holyPower = holyPower;
+        HolyPower = holyPower;
         return this;
     }
 
@@ -31,8 +34,4 @@ public class PaladinAttributesBuilder : CharacterAttributesBuilder
     {
         return new PaladinAttributes(this);
     }
-
-    public int Mana => _mana;
-    public int MaxMana => _maxMana;
-    public int HolyPower => _holyPower;
 }

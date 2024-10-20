@@ -1,4 +1,6 @@
+using ADS_A1.Interfaces.CharacterAttributes;
 using ADS_A1.Interfaces.Characters;
+using ADS_A1.Objects.WorldObjects;
 
 namespace ADS_A1.Functions;
 
@@ -68,15 +70,23 @@ public class Battle
         string tabSpacingPlayer = player.Name.Length > 4 ? "\t" : "\t\t";
         Console.Write(
             $"| {player.Name} {tabSpacingPlayer} : Level {player.Level} {player.GetType().Name} ");
-        Console.WriteLine($"| HP: {player.Health}/{player.Attribute.MaxHealth} |");
+        Console.Write($"| HP: {(int)player.Health}/{(int)player.Attribute.MaxHealth} ");
+        if(player.Attribute is IWarriorAttributes)
+            Console.Write($" Rage: {((IWarriorAttributes)player.Attribute).Rage} |");
+        else if (player.Attribute is IMageAttributes || player.Attribute is IPaladinAttributes)
+            Console.Write($" Mana: {((IMageAttributes)player.Attribute).Mana} |");
+        else 
+            Console.Write(" |");
         Console.ResetColor();
 
         Console.WriteLine("");
     }
-    public static void StartBattle(ICharacter player, IEnumerable<ICharacter> enemy)
+    public static void StartBattle(ICharacter player, IEnumerable<ICharacter> enemy, World world)
     { 
         // Print the interface before the battle starts
         PrintInterface(player);
+        
+        Thread.Sleep(2000);
         
         
         // To avoid multiple enumerations, convert the IEnumerable to an array
@@ -94,7 +104,7 @@ public class Battle
         
         while(characters.Any(e => e.IsAlive()) && player.IsAlive())
         {
-            BattleRound(player, characters);
+            BattleRound(player, characters, world);
         }
         
         // If the player is dead, print a message and exit the game
@@ -117,7 +127,7 @@ public class Battle
         PrintInterface(player);
     }
 
-    public static void BattleRound(ICharacter player, IEnumerable<ICharacter> enemy)
+    public static void BattleRound(ICharacter player, IEnumerable<ICharacter> enemy, World world)
     {
         // To avoid multiple enumerations, convert the IEnumerable to an array
         var characters = enemy as ICharacter[] ?? enemy.ToArray();
@@ -130,7 +140,7 @@ public class Battle
             roundCounter++;
             
             // ask the player if they want to continue the battle or flee every 4 rounds
-            if (roundCounter % 4 == 0 && !Prompt(player))
+            if (roundCounter % 4 == 0 && !Prompt(player, world))
             {
                 return;
             }
@@ -143,7 +153,7 @@ public class Battle
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($"{player.Name} used");
                 player.DoAction(e);
-                Thread.Sleep(new Random().Next(500, 1500));
+                Thread.Sleep(new Random().Next(100, 1500));
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write($"{e.Name} ");
                 e.DoAction(player);
@@ -154,7 +164,7 @@ public class Battle
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write($"{e.Name} ");
                 e.DoAction(player);
-                Thread.Sleep(new Random().Next(500, 2500));
+                Thread.Sleep(new Random().Next(100, 1500));
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($"{player.Name} ");
                 player.DoAction(e);
@@ -169,7 +179,7 @@ public class Battle
         }
     }
 
-    public static bool Prompt(ICharacter player)
+    public static bool Prompt(ICharacter player, World world)
     {
         while (true)
         {
@@ -185,6 +195,7 @@ public class Battle
             {
                 // If the player chooses to flee, break out of the loop
                 Console.ForegroundColor = ConsoleColor.Yellow;
+                world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
                 Console.WriteLine("You have fled from the battle!");
                 Console.ResetColor();
                 return false;

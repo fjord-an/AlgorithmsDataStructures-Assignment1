@@ -17,7 +17,7 @@ public class CharacterAttributesBuilder
     private double _attack;
     private double _defense;
     private double _speed;
-    private int _level;
+    private double _level;
     private double _experience;
     private double _experienceToNextLevel;
     private double _gold;
@@ -52,7 +52,7 @@ public class CharacterAttributesBuilder
         return this;
     }
 
-    public CharacterAttributesBuilder SetLevel(int level)
+    public CharacterAttributesBuilder SetLevel(double level)
     {
         _level = level;
         return this;
@@ -110,7 +110,7 @@ public class CharacterAttributesBuilder
     public double Attack => _attack;
     public double Defense => _defense;
     public double Speed => _speed;
-    public int Level => _level;
+    public double Level => _level;
     public double Experience => _experience;
     public double ExperienceToNextLevel => _experienceToNextLevel;
     public double Gold => _gold;

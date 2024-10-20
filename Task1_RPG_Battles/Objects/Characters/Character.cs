@@ -16,7 +16,7 @@ public class Character : ICharacter
     // exposed
     public virtual ICharacterAttributes Attribute { get; }
     
-    public int Level { get; set; }
+    public double Level { get; set; }
     public bool Alive { get; set; }
     public bool IsPlayer { get; private set; }
     public IZone CurrentZone { get; set; }
@@ -84,7 +84,7 @@ public class Character : ICharacter
         Attribute.SetHealth(multiplier);
         // print the Name of the character inflicted with damage
         
-        Console.Write($"|{Name} | HP: {Health}/{Attribute.MaxHealth} | ");
+        Console.Write($"| {Name} | HP: {Health}/{Attribute.MaxHealth} | ");
         Console.WriteLine();
         
         // Console colour must be reset here as it is the end of the rounds line

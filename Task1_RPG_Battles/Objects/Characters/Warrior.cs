@@ -27,12 +27,12 @@ public class Warrior : Character
         switch (Attribute.Rage)
         {
             case >= 25:
-                Attribute.Rage -= 25;
+                Attribute.Rage -= 20;
                 // use execute if the target is below 30% health else use heavy swing
                 switch (target)
                 {
                     // Execute is a high damage ability that can only be used when the target is below 30% health
-                    case var x when (x.Attribute.Health/x.Attribute.MaxHealth) < 0.3:
+                    case var x when (x.Attribute.Health/x.Attribute.MaxHealth) <= 0.3:
                         Execute(target);
                         break;
                     default:
@@ -59,15 +59,15 @@ public class Warrior : Character
         // performing a transformation on the Health property of the target object
         // which is encapsulated in the attribute class, limiting the modification
         // and performing all associated logic in the attribute class only!
-        Console.Write(" Heavy Swing, ");
+        Console.Write("used Heavy Swing, ");
         target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(600 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
     }
     
     public void Execute(ICharacter target)
     {
-        Console.Write(" Execute, ");
+        Console.Write("used Execute! ");
         // high damage ability that can only be used when the target is below 30% health
-        if (target.Health < 30)
+        if (target.Health <= 30)
             target.SetHealth(-1 * (new Random().NextDouble() * (Math.Sqrt(3000 * Level) - Math.Sqrt(2 * Level)) + Math.Sqrt(2 * Level)));
         else
         {

@@ -15,7 +15,7 @@ namespace ADS_A1
         private static string? _input;
 
         // TODO still not generating new file properly 12/10/2024
-        private static readonly string ConfigPath = "Test.json";
+        private static readonly string ConfigPath = "CharacterConfig.json";
         private static World _world;
 
         static void Main(string[] args)
@@ -31,6 +31,7 @@ namespace ADS_A1
             Config.NewConfig(ConfigPath, new Warrior("Warrior", new WarriorAttributesBuilder().Build(), zone:null, isPlayer:false));
             Config.NewConfig(ConfigPath, new Mage("Mage", new MageAttributesBuilder().Build(), zone:null, isPlayer:false));
             Config.NewConfig(ConfigPath, new Paladin("Paladin", new PaladinAttributesBuilder().Build(), zone:null, isPlayer:false));
+            Config.NewConfig(ConfigPath, new Character("Character", new CharacterAttributesBuilder().Build(), zone:null, isPlayer:false));
 
             IZone startingZone = new Zone("Haven", "A vast open field with a clear sky.");
             _world = new World(startingZone);
@@ -66,7 +67,7 @@ namespace ADS_A1
                             var enemyCount = new Random().Next(-3, 5);
                             for (int i = 0; i <= enemyCount; i++)
                             {
-                                Character enemy = Create.NewCharacter(NameGenerator.ZoneName(new Random().Next(2, 9)), "Warrior", nextZone, player.Level,isPlayer: false);
+                                Character enemy = Create.NewCharacter(NameGenerator.ZoneName(new Random().Next(2, 9)), "Character", nextZone, player.Level,isPlayer: false);
                                 nextZone.ZoneCharacters.AddCharacter(enemy);
                             }
                         }
@@ -86,12 +87,12 @@ namespace ADS_A1
                         if (!nextZone.ZoneCharacters.GetCharacters().Contains(player))
                             Console.WriteLine("Error! Could not add player to the new zone.");
                         
-                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters());
+                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters(), _world);
                         break;
                     case "b":
                         // Move the player back to the previous zone
                         _world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
-                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters());
+                        Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters(), _world);
                         break;
                     case "z":
                         // Show the player where they are

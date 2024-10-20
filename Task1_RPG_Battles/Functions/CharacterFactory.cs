@@ -12,8 +12,8 @@ public static class CharacterFactory
     static double multiplier;
     static double healthChange;
     static double random = new Random().Next(40, 100);
-    static int level;
-    public static Character CreateCharacter(string name, string characterType, JsonElement archetypes, IZone zone, int playerLevel, bool isPlayer = false)
+    static double level;
+    public static Character CreateCharacter(string name, string characterType, JsonElement archetypes, IZone zone, double playerLevel, bool isPlayer = false)
     {
           // by using builders functions, i can efficiently add and update stats at whim, while maintatin data integrity
         // of the Attribute objects themselves
@@ -66,6 +66,18 @@ public static class CharacterFactory
                 .SetMana(config.GetProperty("Mana").GetInt32())
                 .SetMaxMana(config.GetProperty("MaxMana").GetInt32())
                 .SetRunes(config.GetProperty("Runes").GetInt32())
+                .SetHealth(config.GetProperty("Health").GetDouble() * multiplier)
+                .SetMaxHealth(config.GetProperty("MaxHealth").GetDouble() * multiplier)
+                .SetAttack(config.GetProperty("Attack").GetDouble() * multiplier)
+                .SetDefense(config.GetProperty("Defense").GetDouble() * multiplier)
+                .SetSpeed(config.GetProperty("Speed").GetDouble() * multiplier)
+                .SetLevel(config.GetProperty("Level").GetInt32())
+                .SetExperience(config.GetProperty("Experience").GetDouble() * random)
+                .SetExperienceToNextLevel(config.GetProperty("ExperienceToNextLevel").GetDouble() * multiplier)
+                .SetGold(config.GetProperty("Gold").GetDouble() * random)
+                .Build(), zone, isPlayer),
+            
+            "Character" => new Character(name, new CharacterAttributesBuilder()
                 .SetHealth(config.GetProperty("Health").GetDouble() * multiplier)
                 .SetMaxHealth(config.GetProperty("MaxHealth").GetDouble() * multiplier)
                 .SetAttack(config.GetProperty("Attack").GetDouble() * multiplier)

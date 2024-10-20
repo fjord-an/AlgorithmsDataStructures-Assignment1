@@ -4,12 +4,12 @@ using ADS_A1.objects.Attributes.builders;
 
 namespace ADS_A1.objects.Attributes;
 
-public class PaladinAttributes : CharacterAttributes, IPaladinAttributes
+public class PaladinAttributes : WarriorAttributes, IPaladinAttributes
 {
     public double Mana { get; set; }
     public double MaxMana { get; set; }
     // future Paladin ability resource:
-    public int HolyPower { get; }
+    public double HolyPower { get; }
 
     public PaladinAttributes(PaladinAttributesBuilder attributes) : base(attributes)
     {

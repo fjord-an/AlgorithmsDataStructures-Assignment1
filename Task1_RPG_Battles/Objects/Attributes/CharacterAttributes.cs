@@ -17,7 +17,7 @@ public class CharacterAttributes : ICharacterAttributes
     public double Attack { get; set; }
     public double Defense { get; private set; }
     public double Speed { get; private set; }
-    public int Level { get; private set; }
+    public double Level { get; private set; }
     public double Experience { get; private set; }
     public double ExperienceToNextLevel { get; private set; }
     public double Gold { get; private set; }

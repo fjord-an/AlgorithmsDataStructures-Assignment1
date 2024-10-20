@@ -21,12 +21,21 @@ public class Config
         
         try //return null with message if there is an error
         {
-            var jsonString = File.ReadAllText(path);
-            // use a generic/dynamic type, returning all objects from the JSON
-            // this particular method will return an object from the jsonString, transforming
-            // serialized text (1 dimensional) to a multidimensional Datastructure (List/Object) 
-            return JsonDocument.Parse(jsonString);
-            // return JsonSerializer.Deserialize<dynamic>(jsonString);
+            if(File.Exists(path)){
+                var jsonString = File.ReadAllText(path);
+                // use a generic/dynamic type, returning all objects from the JSON
+                // this particular method will return an object from the jsonString, transforming
+                // serialized text (1 dimensional) to a multidimensional Datastructure (List/Object) 
+                return JsonDocument.Parse(jsonString);
+                // return JsonSerializer.Deserialize<dynamic>(jsonString);
+            }
+            else
+            {
+                // TODO need to handle this exception in the calling method
+                // if the file does not exist, throw an exception
+                throw new Exception();
+            }
+            
         }
         catch (Exception e)
         {
@@ -50,41 +59,41 @@ public class Config
     
     public static void NewConfig(string path, Character character)
     {
-        try
-        {
             switch (character)
             {
                 case Paladin:
                     AppendConfig(path, new Paladin("Paladin", new PaladinAttributesBuilder()
-                        .SetMana(100)
-                        .SetMaxMana(100)
-                        .SetHolyPower(0)
-                        .SetAttack(20)
-                        .SetDefense(20)
-                        .SetSpeed(10)
-                        .SetHealth(120)
-                        .SetMaxHealth(100)
-                        .SetExperience(0)
-                        .SetGold(0)
-                        .SetLevel(1)
-                        .SetExperienceToNextLevel(100)
-                        .Build(), null, false
+                            .SetMana(100)
+                            .SetMaxMana(100)
+                            .SetHolyPower(0)
+                            .SetRage(0)
+                            .SetMaxRage(100)
+                            .SetAttack(20)
+                            .SetDefense(20)
+                            .SetSpeed(10)
+                            .SetHealth(120)
+                            .SetMaxHealth(100)
+                            .SetExperience(0)
+                            .SetGold(0)
+                            .SetLevel(1)
+                            .SetExperienceToNextLevel(100)
+                            .Build() as IPaladinAttributes, null, false
                     ));
                     break;
                 case Warrior:
                     AppendConfig(path, new Warrior("Warrior", new WarriorAttributesBuilder()
-                        .SetRage(0)
-                        .SetMaxRage(100)
-                        .SetAttack(30)
-                        .SetDefense(20)
-                        .SetSpeed(10)
-                        .SetHealth(100)
-                        .SetMaxHealth(100)
-                        .SetExperience(0)
-                        .SetGold(0)
-                        .SetLevel(1)
-                        .SetExperienceToNextLevel(100)
-                        .Build(), null, false
+                            .SetRage(0)
+                            .SetMaxRage(100)
+                            .SetAttack(40)
+                            .SetDefense(20)
+                            .SetSpeed(10)
+                            .SetHealth(100)
+                            .SetMaxHealth(100)
+                            .SetExperience(0)
+                            .SetGold(0)
+                            .SetLevel(1)
+                            .SetExperienceToNextLevel(100)
+                            .Build() as IWarriorAttributes ?? throw new InvalidOperationException("Error adding warrior stats to config"), null, false
                     ));
                     break;
                 case Mage:
@@ -101,15 +110,29 @@ public class Config
                         .SetGold(0)
                         .SetLevel(1)
                         .SetExperienceToNextLevel(100)
-                        .Build(), null, false
+                        .Build() as IMageAttributes ?? throw new InvalidOperationException("Error adding warrior stats to config"), null, false
+                    ));
+                    break;
+                case Character:
+                    AppendConfig(path, new Character("Character", new CharacterAttributesBuilder()
+                        .SetAttack(20)
+                        .SetDefense(10)
+                        .SetSpeed(20)
+                        .SetHealth(100)
+                        .SetMaxHealth(100)
+                        .SetExperience(0)
+                        .SetGold(0)
+                        .SetLevel(1)
+                        .SetExperienceToNextLevel(100)
+                        .Build() as ICharacterAttributes, null, false
                     ));
                     break;
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error creating new config file for {character} at location {path}. Error: {e.Message}");
-        }
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine($"Error creating new config file for {character} at location {path}. Error: {e.Message}");
+        // }
     }
 
 

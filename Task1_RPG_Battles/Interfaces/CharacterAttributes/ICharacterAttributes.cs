@@ -10,7 +10,7 @@ public interface ICharacterAttributes
     double Attack { get; set; }
     double Defense { get; }
     double Speed { get; }
-    public int Level { get; }
+    public double Level { get; }
     public double Experience { get; }
     public double ExperienceToNextLevel { get; }
     public double Gold { get; }

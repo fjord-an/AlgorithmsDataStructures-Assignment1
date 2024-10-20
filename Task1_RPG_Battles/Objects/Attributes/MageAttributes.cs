@@ -9,9 +9,9 @@ public class MageAttributes : CharacterAttributes, IMageAttributes
 // Inherit the common/generic CharacterAttributes and implement the IWarriorAttributes
 // so that only the interface is exposed to the game
 {
-    public int Mana { get; set;  }
-    public int MaxMana { get; set; }
-    public int Runes { get; set; }
+    public double Mana { get; set;  }
+    public double MaxMana { get; set; }
+    public double Runes { get; set; }
     
     public MageAttributes(MageAttributesBuilder builder) 
         : base(builder)
