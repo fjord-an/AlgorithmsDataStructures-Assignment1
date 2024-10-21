@@ -18,6 +18,8 @@ public class GenericNode<T>
         // Initialise the node with the data and set the previous and next nodes to the sentinel node
         // or null if no sentinel node is provided. This will allow us to avoid null checks when traversing the list
         // and use the sentinel node as the edge case for the start and end of the list instead of null.
+        
+        //
         Previous = sentinel;
         Data = data;
         Next = sentinel;

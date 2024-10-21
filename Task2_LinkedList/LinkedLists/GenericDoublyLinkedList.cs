@@ -8,10 +8,8 @@ public class GenericDoublyLinkedList<T>
     // The LinkedList class is a collection of nodes that are linked together, This List
     // is a doubly linked list, which means that each node has a reference to the previous and next node.
 
-    private GenericNode<T>? _genericHead;
-    private GenericNode<T>? _genericTail;
-    private IntNode? _intHead;
-    private IntNode? _intTail;
+    private GenericNode<T>? _head;
+    private GenericNode<T>? _tail;
     private readonly GenericNode<T>? _sentinel;
 
     public GenericDoublyLinkedList(bool isSentinel = false)
@@ -31,47 +29,52 @@ public class GenericDoublyLinkedList<T>
         {
             _sentinel = null;
         }
-        _genericHead = _sentinel;
-        _genericTail = _sentinel;
+        _head = _sentinel;
+        _tail = _sentinel;
     }
     
     public GenericDoublyLinkedList(GenericNode<T> node)
     {
-        _genericHead = node;
+        _head = node;
     }
 
-    public void InsertNode(GenericNode<T>? node)
+    public void InsertNode(GenericNode<T> node)
     {
-        // if head is null, assign it to node. By using the null-coalescing operator, we can assign the value if it is null without having to use an if statement
-        // it the the short-hand equivalent to:
-        // if (Head == null)
-        // {
-        //     Head = node;
-        // }
-
-        _genericHead ??= node;
+        // O(1) operation to insert a node at the beginning of the list.
         
-        GenericNode<T>? current = _genericHead;
-
-        while (current!.Next != null)
-            // currently an infinite loop
-            current = current.Next;
-
-        current.Next = node;
+        // if head is null, assign it to node using the null-coalescing operator
+        // short-hand equivalent to:
+        // if (Head == null)
+        //     Head = node;
+        // must be assigned to the edge case to stop infinite loops when enumerating/iterating the list
+        _head ??= _sentinel;
+        
+        node.Next = _head;
+        _head = node;
+    }
+    
+    public void InsertNode(T data)
+    {
+        // by adding an overload method, we can add a node with just the data, making the
+        // process of adding a node even more convenient/flexible.
+        
+        GenericNode<T> newNode = new GenericNode<T>(data, _sentinel);
+        InsertNode(newNode);
     }
 
-    public void AddGenericNode(GenericNode<T>? node=null!)
+    public void AppendNode(GenericNode<T>? node=null!)
     {
-        if (_genericHead == null)
+        // Inserting a node at the end of the list using Tail pointer is an O(1) operation.
+        if (_head == _sentinel)
         {
-            _genericHead = node;
+            _head = node;
         }
         else
         {
-            _genericTail!.Next = node;
-            node.Previous = _genericTail;
+            _tail!.Next = node;
+            node.Previous = _tail;
         }
-        _genericTail = node;
+        _tail = node;
         
         // it is possible to add a node that references itself, which will cause an infinite loop.
         // To prevent this, we can add a check to see if the node references itself.
@@ -79,12 +82,15 @@ public class GenericDoublyLinkedList<T>
             throw new Exception("Node cannot reference itself");
     }
 
-    public void AddGenericNode(T data)
+    public void AppendNode(T data)
     {
         // by adding an overload method, we can add a node with just the data, making the
         // process of adding a node even more convenient/flexible.
-        GenericNode<T> genericNode = new GenericNode<T>(data);
-        AddGenericNode(genericNode);
+        
+        // check to see what type of edge case is being used (sentinel object or null)
+        
+        GenericNode<T> genericNode = new GenericNode<T>(data, _sentinel);
+        AppendNode(genericNode);
     }
     
     public void AddNodeSentinel(GenericNode<T>? node = null)
@@ -113,10 +119,10 @@ public class GenericDoublyLinkedList<T>
         node.Previous = tail;
         node.Next = _sentinel;
         _sentinel.Previous = node;
-        if (_genericHead == _sentinel)
-            _genericHead = node;
+        if (_head == _sentinel)
+            _head = node;
         
-        _genericTail = node;
+        _tail = node;
     }
     
     public void AddNodeSentinel(T data)
@@ -130,17 +136,31 @@ public class GenericDoublyLinkedList<T>
     public void PrintNodes(GenericDoublyLinkedList<T> list, Stopwatch stopwatch, bool showData)
     {
         // IntNode? current = list._intHead;
-        GenericNode<T>? current = _sentinel!.Next;
+        GenericNode<T>? current = _head!.Next;
         if (showData)
-        {
             while (current != _sentinel)
             {
                 Console.Write(" " + current!.Data + " ");
                 current = current.Next;
             }
-        }
 
         Console.WriteLine();
         Console.WriteLine("Time Taken for List Operations:\n" + stopwatch.Elapsed);
+    }
+    
+    public void CountElements(GenericDoublyLinkedList<T> list, Stopwatch stopwatch, bool showData, string mode)
+    {
+        // initialise count to -1 to account for zero-based indexing
+        int count = -1;
+        GenericNode<T>? current = _head.Next;
+        if (showData)
+            while (current != null)
+            {
+                count++;
+                current = current.Next;
+            }
+        
+        Console.WriteLine(count);
+        Console.WriteLine($"Time Taken for {list.GetType().Name} to {mode}:\n{stopwatch.Elapsed}");
     }
 }

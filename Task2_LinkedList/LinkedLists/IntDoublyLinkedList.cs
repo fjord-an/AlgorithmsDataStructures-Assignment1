@@ -53,25 +53,30 @@ public class IntDoublyLinkedList
 
     public void InsertNode(IntNode node)
     {
-        // if head is null, assign it to node. By using the null-coalescing operator, we can assign the value if it is null without having to use an if statement
-        // it the the short-hand equivalent to:
-        // if (Head == null)
-        // {
-        //     Head = node;
-        // }
-
-        _head ??= node;
+        // O(1) operation to insert a node at the beginning of the list.
         
-        IntNode current = _head;
-
-        while (current!.Next != null)
-            // currently an infinite loop
-            current = current.Next;
-
-        current.Next = node;
+        // if head is null, assign it to node using the null-coalescing operator
+        // short-hand equivalent to:
+        // if (Head == null)
+        //     Head = node;
+        // must be assigned to the edge case to stop infinite loops when enumerating/iterating the list
+        _head ??= _sentinel;
+        
+        node.Next = _head;
+        _head = node;
     }
+    
+    public void InsertNode(int data)
+    {
+        // by adding an overload method, we can add a node with just the data, making the
+        // process of adding a node even more convenient/flexible.
+        
+        IntNode newNode = new (data, _sentinel);
+        InsertNode(newNode);
+    }
+    
 
-    public void AddGenericNode(IntNode node=null!)
+    public void AppendNode(IntNode node)
     // TODO 18/10 the sentinel node is not being assigned correctly (is being changed to null)
     {
         if (_head == _sentinel)
@@ -92,12 +97,12 @@ public class IntDoublyLinkedList
             throw new Exception("Node cannot reference itself");
     }
 
-    public void AddGenericNode(int data)
+    public void AppendNode(int data)
     {
         // by adding an overload method, we can add a node with just the data, making the
         // process of adding a node even more convenient/flexible.
-        IntNode node = new(data);
-        AddGenericNode(node);
+        IntNode node = new(data, _sentinel);
+        AppendNode(node);
     }
     
     public void AddNodeSentinal(IntNode node = null)
@@ -145,7 +150,7 @@ public class IntDoublyLinkedList
         // IntNode? current = list._intHead;
         IntNode? current = _head.Next;
         if (showData)
-            while (current != null)
+            while (current != _sentinel)
             {
                 Console.Write(" " + current.Data + " ");
                 current = current.Next;
@@ -153,5 +158,21 @@ public class IntDoublyLinkedList
         
         Console.WriteLine();
         Console.WriteLine("Time Taken for List Operations:\n" + stopwatch.Elapsed);
+    }
+    
+    public void CountElements(IntDoublyLinkedList list, Stopwatch stopwatch, bool showData, string mode)
+    {
+        // initialise count to -1 to account for zero-based indexing
+        int count = -1;
+        IntNode? current = _head.Next;
+        if (showData)
+            while (current != _sentinel)
+            {
+                count++;
+                current = current.Next;
+            }
+        
+        Console.WriteLine(count);
+        Console.WriteLine($"Time Taken for {list.GetType().Name} to {mode}:\n{stopwatch.Elapsed}");
     }
 }

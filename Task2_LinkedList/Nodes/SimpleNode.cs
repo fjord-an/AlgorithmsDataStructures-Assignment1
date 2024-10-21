@@ -12,7 +12,6 @@ public class SimpleNode
     // int typically uses 4 bytes of memory
     public int Data { get; set; }
     public SimpleNode? Next { get; set; }
-    public bool IsSentinel { get; set; }
 
     public SimpleNode(int data)
     {

@@ -4,28 +4,106 @@ using Task2_LinkedList.LinkedLists;
 
 namespace Task2_LinkedList.Benchmarkers
 {
-    // https://benchmarkdotnet.org/articles/samples/IntroDotMemoryDiagnoser.html
     [DotMemoryDiagnoser]
     public class LinkedListBenchmark
     {
-        
-        private GenericDoublyLinkedList<int> _list;
+        private SimpleLinkedList _simpleList;
+        private IntDoublyLinkedList _intList;
+        private GenericDoublyLinkedList<int> _genericList;
 
-        [Params(500)] // Different sizes for benchmarking
+        // Boolean variable to control the sentinel usage
+        private bool useSentinel = false;
+
+        [Params(500, 5000, 50000)] // Different sizes for benchmarking
         public int N;
 
-        [GlobalSetup]
-        public void Setup()
+        [GlobalSetup(Target = nameof(BenchmarkSimpleListAppend))]
+        public void SetupSimpleListAppend()
         {
-            _list = new GenericDoublyLinkedList<int>();
+            _simpleList = new SimpleLinkedList(useSentinel);
+        }
+
+        [GlobalSetup(Target = nameof(BenchmarkSimpleListInsert))]
+        public void SetupSimpleListInsert()
+        {
+            _simpleList = new SimpleLinkedList(useSentinel);
+        }
+
+        [GlobalSetup(Target = nameof(BenchmarkIntListAppend))]
+        public void SetupIntListAppend()
+        {
+            _intList = new IntDoublyLinkedList(useSentinel);
+        }
+
+        [GlobalSetup(Target = nameof(BenchmarkIntListInsert))]
+        public void SetupIntListInsert()
+        {
+            _intList = new IntDoublyLinkedList(useSentinel);
+        }
+
+        [GlobalSetup(Target = nameof(BenchmarkGenericListAppend))]
+        public void SetupGenericListAppend()
+        {
+            _genericList = new GenericDoublyLinkedList<int>(useSentinel);
+        }
+
+        [GlobalSetup(Target = nameof(BenchmarkGenericListInsert))]
+        public void SetupGenericListInsert()
+        {
+            _genericList = new GenericDoublyLinkedList<int>(useSentinel);
         }
 
         [Benchmark]
-        public void AddNodes()
+        public void BenchmarkSimpleListAppend()
         {
             for (int i = 0; i < N; i++)
             {
-                _list.AddNodeSentinel(i);
+                _simpleList.AppendNode(i);
+            }
+        }
+
+        [Benchmark]
+        public void BenchmarkSimpleListInsert()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                _simpleList.InsertNode(i);
+            }
+        }
+
+        [Benchmark]
+        public void BenchmarkIntListAppend()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                _intList.AppendNode(i);
+            }
+        }
+
+        [Benchmark]
+        public void BenchmarkIntListInsert()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                _intList.InsertNode(i);
+            }
+        }
+
+        [Benchmark]
+        public void BenchmarkGenericListAppend()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                _genericList.AppendNode(i);
+            }
+        }
+
+        [Benchmark]
+        public void BenchmarkGenericListInsert()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                _genericList.InsertNode(i);
             }
         }
     }
