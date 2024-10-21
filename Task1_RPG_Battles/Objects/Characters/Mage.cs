@@ -8,14 +8,15 @@ using ADS_A1.Objects.WorldObjects;
 
 namespace ADS_A1.objects.Characters;
 
+// Glass Cannon
 public class Mage : Character
 {
     public override IMageAttributes Attribute { get; }
-    
+
     public Mage(string name, ICharacterAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone,
         isPlayer)
     {
-        Attribute = (IMageAttributes) stats;
+        Attribute = (IMageAttributes)stats;
     }
 
     // different classes of characters will have different attributes:

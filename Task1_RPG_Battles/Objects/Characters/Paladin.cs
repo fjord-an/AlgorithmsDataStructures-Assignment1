@@ -7,14 +7,18 @@ using ADS_A1.objects.Attributes.builders;
 
 namespace ADS_A1.objects.Characters;
 
+// The Defensive Warrior
 public class Paladin : Warrior
 {
     // Cannot override the Attribute property because we are inheriting from the Warrior class
     // therefore, in this situation, the Attribute property must be hidden using the new keyword
-    // i believe that this is generally a bad practice, however in this situation, it is necessary
+    // this may generally be bad practise as it introduces possible bugs, however in this situation it is necassary
     // because the requirements of the game require that the Paladin class inherit from Warrior
+    // i think that in a real implementation of the game, the Paladin would have a completly unique implementation,
+    // mutually exclusive from other classes.
+    //
     private new IPaladinAttributes Attribute { get; }
-    
+
     public Paladin(string name, IPaladinAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone, isPlayer)
     {
         // Attribute property must be cast to the correct type of attributes.
@@ -24,15 +28,17 @@ public class Paladin : Warrior
     }
 
 
+    // Set the mana cost of Heal (initialially 25)
     private double HealCost { get; set; } = 25;
 
     private void Heal(ICharacter target)
     {
+        // heal logic to heal allies (that are not currently implemented). aswell as self        
         if (Attribute.Mana >= HealCost)
         {
             Attribute.Mana -= HealCost;
             Console.Write(" Heal on " + target.Name);
-            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(900 * Level) - Math.Sqrt(2 * Level)) +
+            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(600 * Level) - Math.Sqrt(2 * Level)) +
                              Math.Sqrt(2 * Level));
         }
         else
@@ -45,12 +51,12 @@ public class Paladin : Warrior
     public override void DoAction(ICharacter target)
     {
         // Paladins have the ability to heal themselves and their allies
-        
+
         if (Attribute.Health < 50 && Attribute.Mana > HealCost)
         {
             Heal();
         }
-        else if(Attribute.Rage >= 25)
+        else if (Attribute.Rage >= 25)
         {
             HeavySwing(target);
             Attribute.Rage -= 25;

@@ -7,12 +7,12 @@ namespace ADS_A1.objects.Attributes;
 
 public class WarriorAttributes : CharacterAttributes, IWarriorAttributes
 // Inherit the common/generic CharacterAttributes and implement the IWarriorAttributes
-// so that only the interface is exposed to the game
+// so that only the interface is exposed to the game to decouple components
 {
     public double Rage { get; set; }
     public double MaxRage { get; set; }
-    
-    public WarriorAttributes(WarriorAttributesBuilder attributes) 
+
+    public WarriorAttributes(WarriorAttributesBuilder attributes)
         : base(attributes)
     //using a builder to initialise stats
     {
@@ -20,5 +20,5 @@ public class WarriorAttributes : CharacterAttributes, IWarriorAttributes
         Rage = attributes.Rage;
         MaxRage = attributes.MaxRage;
     }
-   
 }
+

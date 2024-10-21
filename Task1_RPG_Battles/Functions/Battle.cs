@@ -9,19 +9,19 @@ public class Battle
     private static int roundCounter = 0;
 
     public static void StartBattle(ICharacter player, IEnumerable<ICharacter> enemy, World world)
-    { 
+    {
         // Print the interface before the battle starts
         PrintInterface(player);
-        
+
         Thread.Sleep(1000);
-        
-        
+
+
         // To avoid multiple enumerations, convert the IEnumerable to an array
         // before checking the attributes of the characters (i.e. IsAlive())
         // var characters = enemy as ICharacter[] ?? enemy.ToArray();
         var characters = player.CurrentZone.ZoneCharacters.GetCharacters().Where(c => !c.IsPlayer);
-        
-        // Check if there are any enemies in the zone
+
+        // Check if there are any enemies in the zone with an IEnumerable Query
         if (characters.All(c => c == player))
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -29,17 +29,19 @@ public class Battle
             Console.ResetColor();
             return;
         }
-        
-        while(characters.Any(e => e.IsAlive()) && player.IsAlive())
+
+        // Break if all enemies are dead, or character has died:
+        // Query the collection of ZoneCharacters in the zone
+        while (characters.Any(e => e.IsAlive()) && player.IsAlive())
         {
             if (BattleRound(player, characters, world))
             {
                 continue;
             }
-                
+
             break;
         }
-        
+
         // If the player is dead, print a message and exit the game
         if (!player.IsAlive())
         {
@@ -48,7 +50,7 @@ public class Battle
             Console.ResetColor();
             Environment.Exit(0);
         }
-        
+
         // Print the interface after the battle ends, showing the player's health
         PrintInterface(player);
     }
@@ -56,25 +58,24 @@ public class Battle
     private static bool BattleRound(ICharacter player, IEnumerable<ICharacter> enemy, World world)
     {
         // To avoid multiple enumerations, convert the IEnumerable to an array
-        // var characters = enemy as ICharacter[] ?? enemy.ToArray();
+        // if this is not done, the loops will go out of sync with the dynamic collection of characters
         var characters = player.CurrentZone.ZoneCharacters.GetCharacters().Where(c => !c.IsPlayer).ToArray();
-        
+
         foreach (var e in characters)
         {
             // Skip the player
             if (e == player) continue;
-            // if (!e.Alive) break;
-            
+
             // Increment the round counter
             roundCounter++;
-            
+
             // ask the player if they want to continue the battle or flee every 4 rounds
             if (roundCounter % 4 == 0 && !Prompt(player, world))
             {
                 return false;
             }
-            
-            
+
+
             // If the player is faster than the enemy, the player will attack first
             if (player.Attribute.Speed >= e.Attribute.Speed)
             {
@@ -99,8 +100,8 @@ public class Battle
                 Console.Write($"{player.Name} ");
                 player.DoAction(e);
             }
-            
-            if(!e.IsAlive() && e != player)
+
+            if (!e.IsAlive() && e != player)
             {
                 // If the enemy is dead, remove it from the list
                 enemy = characters.Where(c => c != e);
@@ -108,17 +109,18 @@ public class Battle
                 // add experience to the player for each enemy defeated
                 player.Attribute.GainExperience(e.Attribute.Experience);
             }
-            
+
             // Check if all enemies are not alive
             if (characters.All(c => !c.Alive && !c.IsPlayer))
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Victory! All enemies have been defeated!\n\n");
                 Console.ResetColor();
+                // return the ended state of the battle (false = end)
                 return false;
             }
         }
-
+        //return the state of the battle (true = continue)
         return true;
     }
 
@@ -134,7 +136,7 @@ public class Battle
             Console.WriteLine("3. Use an item");
             Console.Write("Enter your choice: ");
             string choice = Console.ReadLine();
-    
+
             if (choice == "2")
             {
                 // If the player chooses to flee, break out of the loop by returning false
@@ -154,7 +156,7 @@ public class Battle
                     Console.WriteLine("3: Return");
                     Console.Write("Enter your choice: ");
                     string itemChoice = Console.ReadLine();
-    
+
                     if (itemChoice == "1")
                     {
                         // Use a health potion
@@ -196,6 +198,7 @@ public class Battle
             }
             else if (choice == "1")
             {
+                // return true to continue to battle loop in StartBattle()
                 return true;
             }
             else
@@ -206,7 +209,7 @@ public class Battle
     }
     private static void PrintInterface(ICharacter player)
     {
-        
+
         // Store the characters in the zone in an IEnumerable to filter them
         IEnumerable<ICharacter> zoneCharacters = player.CurrentZone.ZoneCharacters.GetCharacters();
         // to get the enemies in the zone, filter the characters that are not a player. Store the filtered characters in an array
@@ -224,7 +227,7 @@ public class Battle
         }
         else
         {
-            // if there are no enemies in the zone, print a message
+            // if there are no enemies in the zone, print an environmental message
             Random sounds = new Random();
             switch (sounds.Next(1, 6))
             {
@@ -262,17 +265,19 @@ public class Battle
                 $"| {character.Name} {tabSpacing} : Level {(int)character.Level} {character.GetType().Name} ");
             Console.WriteLine($"| HP: {(int)character.Health}/{(int)character.Attribute.MaxHealth} |");
         }
-        
+
         Console.ForegroundColor = ConsoleColor.Green;
         string tabSpacingPlayer = player.Name.Length > 4 ? "\t" : "\t\t";
+        //Format the Players information, showing class specific stats and updated health for each iteration
+        // or call. this is converted to an int to simplify the display
         Console.Write(
             $"| {player.Name} {tabSpacingPlayer} : Level {(int)player.Level} {player.GetType().Name} ");
         Console.Write($"| HP: {(int)player.Health}/{(int)player.Attribute.MaxHealth} ");
-        if(player.Attribute is IWarriorAttributes)
+        if (player.Attribute is IWarriorAttributes)
             Console.Write($" Rage: {(Convert.ToInt32(((IWarriorAttributes)player.Attribute).Rage))} |");
         else if (player.Attribute is IMageAttributes || player.Attribute is IPaladinAttributes)
             Console.Write($" Mana: {(Convert.ToInt32(((IMageAttributes)player.Attribute).Mana))} |");
-        else 
+        else
             Console.Write(" |");
         Console.ResetColor();
 

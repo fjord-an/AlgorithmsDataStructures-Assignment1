@@ -26,15 +26,10 @@ public class CharacterAttributes : ICharacterAttributes
 
     public CharacterAttributes(CharacterAttributesBuilder builder)
     {
-        // I pass a Builder object to this constructor so that the constructor is more readable
-        // and maintainable. utilizing a builder avoids using too many method overloaders
-        // aswell as providing more maintainable and extensible code for the future, at the expense
-        // of writing slightly more code with new implementations, however interfacing with 
-        // these properties is far more flexible using a builder object
-        // using builders also ensures that the objects properties are immutable unless explicitely
-        // ??????changed through the builder methods???????????
-        // to maintain simplicity, i only made a builder for the base CharacterAttributes object
-        // TODO add reference of builder object and using them
+        // using a builder object avoids using too many method overloaders and simplifies 
+        // the initialization of complex objects aswell as providing more maintainable and extensible 
+        // code for the future. this came at the expense of writing more code with new implementations.
+        // using builders also ensures that the objects properties are immutable 
         Health = builder.Health;
         MaxHealth = builder.MaxHealth;
         Attack = builder.Attack;
@@ -48,6 +43,8 @@ public class CharacterAttributes : ICharacterAttributes
 
     public double SetHealth(double multiplier)
     {
+        // Attribute logic is encapsulated in the CharacterAttributes object.
+        // all changes to characters health must be performed using this function
         double healthChange = multiplier * Math.Sqrt(Level);
         Health += healthChange;
         if (Health > MaxHealth)
@@ -58,19 +55,20 @@ public class CharacterAttributes : ICharacterAttributes
         {
             Health = 0;
         }
-        if(healthChange < 0)
+        if (healthChange < 0)
             Console.Write($"Inflicting {-1 * (int)healthChange} Damage to ");
-        
-        // return the damage so the details can be used in the character class
+
+        // return the damage so the details can be displayed on the UI and in the character class
         return healthChange;
     }
-    
+
     public void Heal(double heal) => Health += heal;
     public void GainGold(double gold) => Gold += gold;
-    
+
     public void LevelUp(int level = 1)
     {
-        Level+= level;
+        // TODO unfortunately, leveling system has not currently been fully implemented
+        Level += level;
         Experience = 0;
         ExperienceToNextLevel *= 2;
         Console.WriteLine($"{Name} has leveled up to level {Level}");

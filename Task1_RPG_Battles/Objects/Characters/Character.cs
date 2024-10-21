@@ -7,20 +7,20 @@ using ADS_A1.Objects.WorldObjects;
 
 namespace ADS_A1.objects.Characters;
 
+// Default characters. decent stats, lacking special abilites
 public class Character : ICharacter
 {
     public String Name { get; set; }
     // I have decoupled the characters attributes so that they can
     // be easily extended and tested. Considering stats are a very
-    // finicky and subjective to change at all times, only the interface is
-    // exposed
+    // finicky and subjective to change at all times, only the interface is exposed
     public virtual ICharacterAttributes Attribute { get; }
-    
+
     public double Level { get; set; }
     public bool Alive { get; set; }
     public bool IsPlayer { get; private set; }
     public IZone CurrentZone { get; set; }
-    
+
     public double Health => Attribute.Health;
 
     // using generic action delegate of the .NET framework so that the player can execute generic actions 
@@ -29,7 +29,7 @@ public class Character : ICharacter
     // this will be polymorphic, allowing Interface objects to be passed to the character class 
     public virtual Action<IInteractiveWorldObject>? Interact { get; set; }
 
-    public Character(string name, ICharacterAttributes attribute, IZone zone,  bool isPlayer=false)
+    public Character(string name, ICharacterAttributes attribute, IZone zone, bool isPlayer = false)
     {
         // Using method to change health, so that the health is encapsulated
         // in the attribute class and limits modification to the health except
@@ -47,15 +47,15 @@ public class Character : ICharacter
         SetAttributeName(Name);
         IsAlive();
     }
-    
-    
+
+
     // I have seperated the logic from character attributes to the character class
     // All stats are encapsulated there, the character class will access each instances
     // unique attributes
 
     private void SetAttributeName(string name)
     {
-        if(Attribute != null)
+        if (Attribute != null)
             Attribute.Name = name;
     }
 
@@ -69,7 +69,7 @@ public class Character : ICharacter
                 Alive = true;
                 return true;
             }
-            
+
             Alive = false;
             return false;
         }
@@ -83,33 +83,33 @@ public class Character : ICharacter
     {
         double damage = Attribute.SetHealth(multiplier);
         // print the Name of the character inflicted with damage
-        
+
         string tabSpacingPlayer = Name.Length > 4 ? "\t" : "\t\t";
         Console.Write($"\n| {Name} {tabSpacingPlayer} | HP: {(int)Health}/{(int)Attribute.MaxHealth} ({(int)damage}) \t| ");
         // we can check if the character is a mage or warrior by checking if the attribute has the correct property
         // this can be found by using the generic object method GetType()
-        if (Attribute.GetType().GetProperty("Rage")!=null)
+        if (Attribute.GetType().GetProperty("Rage") != null)
         {
             Console.Write($"Rage: {(int)((IWarriorAttributes)Attribute).Rage} | ");
         }
-        if (Attribute.GetType().GetProperty("Mana")!=null)
+        if (Attribute.GetType().GetProperty("Mana") != null)
         {
             Console.Write($"Mana: {(int)((IManaAttributes)Attribute).Mana}/{(int)((IManaAttributes)Attribute).MaxMana} | ");
         }
-        
+
         Console.WriteLine();
-        
+
         // Console colour must be reset here as it is the end of the rounds line
         Console.ResetColor();
 
         return damage;
     }
-    
+
     public void FindCurrentZone(World world)
     {
         CurrentZone = world.FindPlayersCurrentZone(this);
     }
-    
+
     // currently, damage multipliers are calculated by multiplying the damage
     // by -1, so that the damage is subtracted from the health of the target
     public void BasicAttack(ICharacter target)
@@ -118,7 +118,7 @@ public class Character : ICharacter
         // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 
         target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(200 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
     }
-    
+
     public virtual void DoAction(ICharacter target)
     {
         // the attack will be based on the level of the character and a random number. the formula used here helps normalise the damage to prevent high level characters from dealing too much damage 

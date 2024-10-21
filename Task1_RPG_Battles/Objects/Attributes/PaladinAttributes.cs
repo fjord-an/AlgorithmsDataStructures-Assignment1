@@ -10,10 +10,11 @@ public class PaladinAttributes : WarriorAttributes, IPaladinAttributes
     public double Mana
     {
         get => _mana;
+        // Ensure Mana never exceeds MaxMana by filtering all setter calls with a ternary operator
         set => _mana = value > MaxMana ? MaxMana : value;
     }
     public double MaxMana { get; set; }
-    // future Paladin ability resource:
+    // future Unique Paladin ability resource:
     public double HolyPower { get; }
 
     public PaladinAttributes(PaladinAttributesBuilder attributes) : base(attributes)

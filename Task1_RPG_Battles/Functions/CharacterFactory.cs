@@ -15,11 +15,11 @@ public static class CharacterFactory
     static double level;
     public static Character CreateCharacter(string name, string characterType, JsonElement archetypes, IZone zone, double playerLevel, bool isPlayer = false)
     {
-          // by using builders functions, i can efficiently add and update stats at whim, while maintatin data integrity
-        // of the Attribute objects themselves
-        
+        // by using builders functions, i can efficiently add and update stats at whim, while maintatin data integrity
+        // of the Attribute objects themselves. All stats can be changed through the generated config file.
+
         JsonElement config = archetypes.GetProperty(characterType);
-        if(isPlayer)
+        if (isPlayer)
         {
             multiplier = 1;
             random = 0;
@@ -29,7 +29,7 @@ public static class CharacterFactory
             multiplier = 0.75;
             level = playerLevel;
         }
-        
+
         return characterType switch
         {
             //create with builder pattern and get property values from the json object document using GetProperty method
@@ -76,7 +76,7 @@ public static class CharacterFactory
                 .SetExperienceToNextLevel(config.GetProperty("ExperienceToNextLevel").GetDouble() * multiplier)
                 .SetGold(config.GetProperty("Gold").GetDouble() * random)
                 .Build(), zone, isPlayer),
-            
+
             "Character" => new Character(name, new CharacterAttributesBuilder()
                 .SetHealth(config.GetProperty("Health").GetDouble() * multiplier)
                 .SetMaxHealth(config.GetProperty("MaxHealth").GetDouble() * multiplier)
@@ -88,7 +88,7 @@ public static class CharacterFactory
                 .SetExperienceToNextLevel(config.GetProperty("ExperienceToNextLevel").GetDouble() * multiplier)
                 .SetGold(config.GetProperty("Gold").GetDouble() * random)
                 .Build(), zone, isPlayer),
-            
+
             "" => new Character(name, new CharacterAttributesBuilder()
                 .SetHealth(config.GetProperty("Health").GetDouble() * multiplier)
                 .SetAttack(config.GetProperty("Attack").GetDouble() * multiplier)
@@ -99,9 +99,9 @@ public static class CharacterFactory
                 .SetExperienceToNextLevel(config.GetProperty("ExperienceToNextLevel").GetDouble() * multiplier)
                 .SetGold(config.GetProperty("Gold").GetDouble() * random)
                 .Build(), zone, isPlayer),
-                // catch an invalid class/null/empty entry from configuration file before defaulting to Character type
-                // ^ default character type if none is specified.
-            
+            // catch an invalid class/null/empty entry from configuration file before defaulting to Character type
+            // ^ default character type if none is specified.
+
             _ => throw new InvalidOperationException($"Error in Initializing class: {characterType}. \tCannot determine this class type")
         };
     }
