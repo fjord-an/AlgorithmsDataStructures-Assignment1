@@ -60,8 +60,8 @@ namespace Tests
                 .SetExperienceToNextLevel(10)
                 .Build();
             
-            var warrior = new Warrior("Warrior", warriorAttributes);
-            var bob = new Character("Bob", defaultAttributes);
+            var warrior = new Warrior("Warrior", warriorAttributes, null);
+            var bob = new Character("Bob", defaultAttributes, null);
 
             // Append characters to the JSON file
             Config.AppendConfig(_tempFilePath, warrior);

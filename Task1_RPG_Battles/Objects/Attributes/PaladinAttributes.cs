@@ -6,7 +6,12 @@ namespace ADS_A1.objects.Attributes;
 
 public class PaladinAttributes : WarriorAttributes, IPaladinAttributes
 {
-    public double Mana { get; set; }
+    private double _mana;
+    public double Mana
+    {
+        get => _mana;
+        set => _mana = value > MaxMana ? MaxMana : value;
+    }
     public double MaxMana { get; set; }
     // future Paladin ability resource:
     public double HolyPower { get; }

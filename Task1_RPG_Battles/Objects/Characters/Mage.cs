@@ -47,12 +47,12 @@ public class Mage : Character
     {
         Console.Write(" PyroBlast, ");
         // Attack functions will return void because damage is inflicted by performing a transformation on the Health property of the target object
-        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(1000 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
+        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(3500 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
     }
 
     private void Fireball(ICharacter target)
     {
         Console.Write(" Fireball, ");
-        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(700 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
+        target.SetHealth(-1 * new Random().NextDouble() * (Math.Sqrt(2000 * Level) - Math.Sqrt(2 * (Level + Attribute.Attack)) + Math.Sqrt(2 * (Level + Attribute.Attack))));
     }
 }

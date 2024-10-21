@@ -44,7 +44,8 @@ namespace ADS_A1
             
             while (_input != "q")
             {
-                Console.WriteLine("'b' back, 'n' forward, 'z' current zone, 's' stats, 'o' save, 'q' to quit");
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("| '1' move forward | '2' move back | '3' show current zone | 's' show stats | 'q' to quit |");
                 // Prompt the user for input and change the console color to yellow for user input only
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 _input = Console.ReadLine();
@@ -54,7 +55,7 @@ namespace ADS_A1
 
                 switch (_input)
                 {
-                    case "n":
+                    case "1":
                         IZone nextZone;
                         // check if the next zone needs to be generated or if it
                         // already exists from the player's current zone
@@ -89,18 +90,22 @@ namespace ADS_A1
                         
                         Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters(), _world);
                         break;
-                    case "b":
-                        // Move the player back to the previous zone
+                    case "2":
+                        // Move the player back to the previous zone if not in the starting zone
+                        if (player.CurrentZone.PreviousZone is null)
+                        {
+                            Console.WriteLine("There are no adventures before Haven! You must press on! Press '1' then enter to start your journey.");
+                            break;
+                        }
                         _world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
                         Battle.StartBattle(player, player.CurrentZone.ZoneCharacters.GetCharacters(), _world);
                         break;
-                    case "z":
+                    case "3":
                         // Show the player where they are
                         Console.WriteLine($"You are in {player.CurrentZone.Name}, a {player.CurrentZone.Description}");
                         break;
                     case "o":
                         // Save the game state
-                        // SaveGame.Save(player, player.CurrentZone);
                         Console.WriteLine("Save game functionality not implemented yet.");
                         break;
                     case "s":
@@ -116,72 +121,6 @@ namespace ADS_A1
                 // playersCurrentZone = _world.PlayersCurrentZone;
                 Console.WriteLine($"You are in {player.CurrentZone.Name}, a {player.CurrentZone.Description}");
 
-                // #####################
-                // // Store the characters in the zone in an IEnumerable to filter them
-                // IEnumerable<Character> zoneCharacters = player.CurrentZone.ZoneCharacters.GetCharacters();
-                // // to get the enemies in the zone, filter the characters that are not a player. Store the filtered characters in an array
-                // // to avoid multiple iterations of the IEnumerable when counting the enemies, increasing performance
-                // Character[] enemies = zoneCharacters.Where(c => !c.IsPlayer).ToArray();
-                // if (enemies.Any())
-                // {
-                //     Console.ForegroundColor = ConsoleColor.Red;
-                //     // if there are enemies in the zone, print the number of enemies and their names. using the ternary operator to
-                //     // print the correct plural form
-                //     Console.WriteLine(enemies.Count() == 1
-                //         ? $"You encounter {enemies.Count()} enemy in this zone."
-                //         : $"You encounter {enemies.Count()} enemies in this zone.");
-                //     Console.ResetColor();
-                // }
-                // else
-                // {
-                //     // if there are no enemies in the zone, print a message
-                //     Random sounds = new Random();
-                //     switch (sounds.Next(1, 6))
-                //     {
-                //         case 1:
-                //             if (player.CurrentZone.Name.Contains("Forest"))
-                //                 Console.WriteLine("You hear the sound of rustling leaves.");
-                //             else
-                //                 Console.WriteLine("You hear the sound of a distant waterfall.");
-                //             break;
-                //         case 2:
-                //             Console.WriteLine("You hear the sound of a bird chirping.");
-                //             break;
-                //         case 3:
-                //             Console.WriteLine("You hear the sound of a distant wind.");
-                //             break;
-                //         case 4:
-                //             Console.WriteLine("You hear nothing but the sound of your own footsteps.");
-                //             break;
-                //         case 5:
-                //             Console.WriteLine("You hear the scurrying of unknown creatures.");
-                //             break;
-                //         default:
-                //             Console.WriteLine("You are in a quiet place.");
-                //             break;
-                //     }
-                // }
-                //
-                // foreach (var character in enemies)
-                // {
-                //     if (character.IsPlayer)
-                //         continue;
-                //
-                //     string tabSpacing = character.Name.Length > 4 ? "\t" : "\t\t";
-                //     Console.Write(
-                //         $"| {character.Name} {tabSpacing} : Level {character.Level} {character.GetType().Name} ");
-                //     Console.WriteLine($"| HP: {character.Health}/{character.Attribute.MaxHealth} |");
-                // }
-                //
-                // Console.ForegroundColor = ConsoleColor.Green;
-                // string tabSpacingPlayer = player.Name.Length > 4 ? "\t" : "\t\t";
-                // Console.Write(
-                //     $"| {player.Name} {tabSpacingPlayer} : Level {player.Level} {player.GetType().Name} ");
-                // Console.WriteLine($"| HP: {player.Health}/{player.Attribute.MaxHealth} |");
-                // Console.ResetColor();
-                //
-                // Console.WriteLine("");
-                // #####################
             }
         }
     }

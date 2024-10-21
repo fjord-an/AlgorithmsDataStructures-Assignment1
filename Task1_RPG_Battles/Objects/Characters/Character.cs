@@ -79,16 +79,30 @@ public class Character : ICharacter
 
     public void TakeDamage(int damage) => Attribute.SetHealth((-1 * damage));
 
-    public void SetHealth(double multiplier)
+    public double SetHealth(double multiplier)
     {
-        Attribute.SetHealth(multiplier);
+        double damage = Attribute.SetHealth(multiplier);
         // print the Name of the character inflicted with damage
         
-        Console.Write($"| {Name} | HP: {Health}/{Attribute.MaxHealth} | ");
+        string tabSpacingPlayer = Name.Length > 4 ? "\t" : "\t\t";
+        Console.Write($"\n| {Name} {tabSpacingPlayer} | HP: {(int)Health}/{(int)Attribute.MaxHealth} ({(int)damage}) \t| ");
+        // we can check if the character is a mage or warrior by checking if the attribute has the correct property
+        // this can be found by using the generic object method GetType()
+        if (Attribute.GetType().GetProperty("Rage")!=null)
+        {
+            Console.Write($"Rage: {(int)((IWarriorAttributes)Attribute).Rage} | ");
+        }
+        if (Attribute.GetType().GetProperty("Mana")!=null)
+        {
+            Console.Write($"Mana: {(int)((IManaAttributes)Attribute).Mana}/{(int)((IManaAttributes)Attribute).MaxMana} | ");
+        }
+        
         Console.WriteLine();
         
         // Console colour must be reset here as it is the end of the rounds line
         Console.ResetColor();
+
+        return damage;
     }
     
     public void FindCurrentZone(World world)

@@ -22,5 +22,5 @@ public interface ICharacterAttributes
 
     public void GainGold(double gold);
 
-    public void SetHealth(double damage);
+    public double SetHealth(double damage);
 }

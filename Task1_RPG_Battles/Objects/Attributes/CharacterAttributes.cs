@@ -46,7 +46,7 @@ public class CharacterAttributes : ICharacterAttributes
         Gold = builder.Gold;
     }
 
-    public void SetHealth(double multiplier)
+    public double SetHealth(double multiplier)
     {
         double healthChange = multiplier * Math.Sqrt(Level);
         Health += healthChange;
@@ -60,7 +60,11 @@ public class CharacterAttributes : ICharacterAttributes
         }
         if(healthChange < 0)
             Console.Write($"Inflicting {-1 * (int)healthChange} Damage to ");
+        
+        // return the damage so the details can be used in the character class
+        return healthChange;
     }
+    
     public void Heal(double heal) => Health += heal;
     public void GainGold(double gold) => Gold += gold;
     

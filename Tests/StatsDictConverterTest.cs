@@ -25,7 +25,7 @@ namespace Tests
                 .SetLevel(11)
                 .SetSpeed(10)
                 .SetExperienceToNextLevel(10)
-                .Build()
+                .Build(), null
             );
 
             // Act

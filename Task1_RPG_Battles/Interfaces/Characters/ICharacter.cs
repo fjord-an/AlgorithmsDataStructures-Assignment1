@@ -23,7 +23,7 @@ public interface ICharacter
 
     public bool IsAlive() => Attribute.IsAlive;
     public void TakeDamage(int damage);
-    public void SetHealth(double multiplier);
+    public double SetHealth(double multiplier);
     public void FindCurrentZone(World world);
     public void BasicAttack(ICharacter target);
 

@@ -7,7 +7,204 @@ namespace ADS_A1.Functions;
 public class Battle
 {
     private static int roundCounter = 0;
-    public static void PrintInterface(ICharacter player)
+
+    public static void StartBattle(ICharacter player, IEnumerable<ICharacter> enemy, World world)
+    { 
+        // Print the interface before the battle starts
+        PrintInterface(player);
+        
+        Thread.Sleep(1000);
+        
+        
+        // To avoid multiple enumerations, convert the IEnumerable to an array
+        // before checking the attributes of the characters (i.e. IsAlive())
+        // var characters = enemy as ICharacter[] ?? enemy.ToArray();
+        var characters = player.CurrentZone.ZoneCharacters.GetCharacters().Where(c => !c.IsPlayer);
+        
+        // Check if there are any enemies in the zone
+        if (characters.All(c => c == player))
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("There are no enemies in this zone.");
+            Console.ResetColor();
+            return;
+        }
+        
+        while(characters.Any(e => e.IsAlive()) && player.IsAlive())
+        {
+            if (BattleRound(player, characters, world))
+            {
+                continue;
+            }
+                
+            break;
+        }
+        
+        // If the player is dead, print a message and exit the game
+        if (!player.IsAlive())
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You have been defeated!");
+            Console.ResetColor();
+            Environment.Exit(0);
+        }
+        
+        // Print the interface after the battle ends, showing the player's health
+        PrintInterface(player);
+    }
+
+    private static bool BattleRound(ICharacter player, IEnumerable<ICharacter> enemy, World world)
+    {
+        // To avoid multiple enumerations, convert the IEnumerable to an array
+        // var characters = enemy as ICharacter[] ?? enemy.ToArray();
+        var characters = player.CurrentZone.ZoneCharacters.GetCharacters().Where(c => !c.IsPlayer).ToArray();
+        
+        foreach (var e in characters)
+        {
+            // Skip the player
+            if (e == player) continue;
+            // if (!e.Alive) break;
+            
+            // Increment the round counter
+            roundCounter++;
+            
+            // ask the player if they want to continue the battle or flee every 4 rounds
+            if (roundCounter % 4 == 0 && !Prompt(player, world))
+            {
+                return false;
+            }
+            
+            
+            // If the player is faster than the enemy, the player will attack first
+            if (player.Attribute.Speed >= e.Attribute.Speed)
+            {
+                // The player and enemy will attack each other. State the name of the player and enemy
+                // before they attack
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write($"{player.Name} used");
+                player.DoAction(e);
+                Thread.Sleep(new Random().Next(100, 1500));
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write($"{e.Name} ");
+                e.DoAction(player);
+            }
+            else
+            {
+                // The enemy will attack first
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write($"{e.Name} ");
+                e.DoAction(player);
+                Thread.Sleep(new Random().Next(100, 1500));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write($"{player.Name} ");
+                player.DoAction(e);
+            }
+            
+            if(!e.IsAlive() && e != player)
+            {
+                // If the enemy is dead, remove it from the list
+                enemy = characters.Where(c => c != e);
+                player.CurrentZone.ZoneCharacters.RemoveCharacter(e);
+                // add experience to the player for each enemy defeated
+                player.Attribute.GainExperience(e.Attribute.Experience);
+            }
+            
+            // Check if all enemies are not alive
+            if (characters.All(c => !c.Alive && !c.IsPlayer))
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Victory! All enemies have been defeated!\n\n");
+                Console.ResetColor();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool Prompt(ICharacter player, World world)
+    {
+        while (true)
+        {
+            PrintInterface(player);
+            // Ask the player if they want to continue the battle or flee
+            Console.WriteLine("Do you want to continue the battle or flee?");
+            Console.WriteLine("1. Continue the battle");
+            Console.WriteLine("2. Flee");
+            Console.WriteLine("3. Use an item");
+            Console.Write("Enter your choice: ");
+            string choice = Console.ReadLine();
+    
+            if (choice == "2")
+            {
+                // If the player chooses to flee, break out of the loop by returning false
+                // and set the player's current zone to the previous zone
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
+                Console.WriteLine("You have fled from the battle!");
+                Console.ResetColor();
+                return false;
+            }
+            else if (choice == "3")
+            {
+                while (true)
+                {
+                    Console.WriteLine("1: Health potion");
+                    Console.WriteLine("2: Attack potion");
+                    Console.WriteLine("3: Return");
+                    Console.Write("Enter your choice: ");
+                    string itemChoice = Console.ReadLine();
+    
+                    if (itemChoice == "1")
+                    {
+                        // Use a health potion
+                        double healing = player.SetHealth(40);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"You have used a health potion! Gained {healing} health! (health increased to {player.Health})");
+                        Console.ResetColor();
+                        break;
+                    }
+                    else if (itemChoice == "2")
+                    {
+                        // Use an attack potion
+                        var rand = new Random().Next(-3, 8);
+                        player.Attribute.Attack += rand;
+                        if (rand > 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"You have used an attack potion! (attack increased to {player.Attribute.Attack})");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"You have used an attack potion! It was ineffective! (attack decreased to {player.Attribute.Attack})");
+                        }
+
+                        Console.ResetColor();
+                        break;
+                    }
+                    else if (itemChoice == "3")
+                    {
+                        // Return to the previous menu
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid choice. Please try again.");
+                    }
+                }
+            }
+            else if (choice == "1")
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please try again.");
+            }
+        }
+    }
+    private static void PrintInterface(ICharacter player)
     {
         
         // Store the characters in the zone in an IEnumerable to filter them
@@ -62,201 +259,23 @@ public class Battle
 
             string tabSpacing = character.Name.Length > 4 ? "\t" : "\t\t";
             Console.Write(
-                $"| {character.Name} {tabSpacing} : Level {character.Level} {character.GetType().Name} ");
-            Console.WriteLine($"| HP: {character.Health}/{character.Attribute.MaxHealth} |");
+                $"| {character.Name} {tabSpacing} : Level {(int)character.Level} {character.GetType().Name} ");
+            Console.WriteLine($"| HP: {(int)character.Health}/{(int)character.Attribute.MaxHealth} |");
         }
         
         Console.ForegroundColor = ConsoleColor.Green;
         string tabSpacingPlayer = player.Name.Length > 4 ? "\t" : "\t\t";
         Console.Write(
-            $"| {player.Name} {tabSpacingPlayer} : Level {player.Level} {player.GetType().Name} ");
+            $"| {player.Name} {tabSpacingPlayer} : Level {(int)player.Level} {player.GetType().Name} ");
         Console.Write($"| HP: {(int)player.Health}/{(int)player.Attribute.MaxHealth} ");
         if(player.Attribute is IWarriorAttributes)
-            Console.Write($" Rage: {((IWarriorAttributes)player.Attribute).Rage} |");
+            Console.Write($" Rage: {(Convert.ToInt32(((IWarriorAttributes)player.Attribute).Rage))} |");
         else if (player.Attribute is IMageAttributes || player.Attribute is IPaladinAttributes)
-            Console.Write($" Mana: {((IMageAttributes)player.Attribute).Mana} |");
+            Console.Write($" Mana: {(Convert.ToInt32(((IMageAttributes)player.Attribute).Mana))} |");
         else 
             Console.Write(" |");
         Console.ResetColor();
 
         Console.WriteLine("");
-    }
-    public static void StartBattle(ICharacter player, IEnumerable<ICharacter> enemy, World world)
-    { 
-        // Print the interface before the battle starts
-        PrintInterface(player);
-        
-        Thread.Sleep(2000);
-        
-        
-        // To avoid multiple enumerations, convert the IEnumerable to an array
-        // before checking the attributes of the characters (i.e. IsAlive())
-        var characters = enemy as ICharacter[] ?? enemy.ToArray();
-        
-        // Check if there are any enemies in the zone
-        if (characters.All(c => c == player))
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("There are no enemies in this zone.");
-            Console.ResetColor();
-            return;
-        }
-        
-        while(characters.Any(e => e.IsAlive()) && player.IsAlive())
-        {
-            BattleRound(player, characters, world);
-        }
-        
-        // If the player is dead, print a message and exit the game
-        if (!player.IsAlive())
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You have been defeated!");
-            Console.ResetColor();
-            Environment.Exit(0);
-        }
-        else
-        {
-            // If the player is alive, print a message
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("You have defeated all enemies in this zone!");
-            Console.ResetColor();
-        }
-        
-        // Print the interface after the battle ends, showing the player's health
-        PrintInterface(player);
-    }
-
-    public static void BattleRound(ICharacter player, IEnumerable<ICharacter> enemy, World world)
-    {
-        // To avoid multiple enumerations, convert the IEnumerable to an array
-        var characters = enemy as ICharacter[] ?? enemy.ToArray();
-        foreach (var e in characters)
-        {
-            // Skip the player
-            if (e == player) continue;
-            
-            // Increment the round counter
-            roundCounter++;
-            
-            // ask the player if they want to continue the battle or flee every 4 rounds
-            if (roundCounter % 4 == 0 && !Prompt(player, world))
-            {
-                return;
-            }
-            
-            // If the player is faster than the enemy, the player will attack first
-            if (player.Attribute.Speed >= e.Attribute.Speed)
-            {
-                // The player and enemy will attack each other. State the name of the player and enemy
-                // before they attack
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{player.Name} used");
-                player.DoAction(e);
-                Thread.Sleep(new Random().Next(100, 1500));
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"{e.Name} ");
-                e.DoAction(player);
-            }
-            else
-            {
-                // The enemy will attack first
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"{e.Name} ");
-                e.DoAction(player);
-                Thread.Sleep(new Random().Next(100, 1500));
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{player.Name} ");
-                player.DoAction(e);
-            }
-            if(!e.IsAlive() && e != player)
-            {
-                // If the enemy is dead, remove it from the list
-                enemy = characters.Where(c => c != e);
-                // add experience to the player for each enemy defeated
-                player.Attribute.GainExperience(e.Attribute.Experience);
-            }
-        }
-    }
-
-    public static bool Prompt(ICharacter player, World world)
-    {
-        while (true)
-        {
-            // Ask the player if they want to continue the battle or flee
-            Console.WriteLine("Do you want to continue the battle or flee?");
-            Console.WriteLine("1. Continue the battle");
-            Console.WriteLine("2. Flee");
-            Console.WriteLine("3. Use an item");
-            Console.Write("Enter your choice: ");
-            string choice = Console.ReadLine();
-    
-            if (choice == "2")
-            {
-                // If the player chooses to flee, break out of the loop
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                world.SetPlayersCurrentZone(player.CurrentZone.PreviousZone, player);
-                Console.WriteLine("You have fled from the battle!");
-                Console.ResetColor();
-                return false;
-            }
-            else if (choice == "3")
-            {
-                while (true)
-                {
-                    Console.WriteLine("1: Health potion");
-                    Console.WriteLine("2: Attack potion");
-                    Console.WriteLine("3: Return");
-                    Console.Write("Enter your choice: ");
-                    string itemChoice = Console.ReadLine();
-    
-                    if (itemChoice == "1")
-                    {
-                        // Use a health potion
-                        player.SetHealth(40);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("You have used a health potion!");
-                        Console.ResetColor();
-                        break;
-                    }
-                    else if (itemChoice == "2")
-                    {
-                        // Use an attack potion
-                        var rand = new Random().Next(-3, 8);
-                        player.Attribute.Attack += rand;
-                        if (rand > 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"You have used an attack potion! (attack increased to {player.Attribute.Attack})");
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"You have used an attack potion! It was ineffective! (attack decreased to {player.Attribute.Attack})");
-                        }
-
-                        Console.ResetColor();
-                        break;
-                    }
-                    else if (itemChoice == "3")
-                    {
-                        // Return to the previous menu
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid choice. Please try again.");
-                    }
-                }
-            }
-            else if (choice == "1")
-            {
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice. Please try again.");
-            }
-        }
     }
 }

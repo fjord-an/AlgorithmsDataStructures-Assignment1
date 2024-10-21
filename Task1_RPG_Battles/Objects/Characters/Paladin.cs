@@ -13,7 +13,7 @@ public class Paladin : Warrior
     // therefore, in this situation, the Attribute property must be hidden using the new keyword
     // i believe that this is generally a bad practice, however in this situation, it is necessary
     // because the requirements of the game require that the Paladin class inherit from Warrior
-    public new IPaladinAttributes Attribute { get; }
+    private new IPaladinAttributes Attribute { get; }
     
     public Paladin(string name, IPaladinAttributes stats, IZone zone, bool isPlayer = false) : base(name, stats, zone, isPlayer)
     {
@@ -31,8 +31,8 @@ public class Paladin : Warrior
         if (Attribute.Mana >= HealCost)
         {
             Attribute.Mana -= HealCost;
-            Console.WriteLine(" Heal on " + target.Name);
-            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(100 * Level) - Math.Sqrt(2 * Level)) +
+            Console.Write(" Heal on " + target.Name);
+            target.SetHealth(new Random().NextDouble() * (Math.Sqrt(900 * Level) - Math.Sqrt(2 * Level)) +
                              Math.Sqrt(2 * Level));
         }
         else
@@ -40,27 +40,27 @@ public class Paladin : Warrior
     }
 
     // If no target is passed, heal self
-    public void Heal() => Heal(this);
+    private void Heal() => Heal(this);
 
     public override void DoAction(ICharacter target)
     {
         // Paladins have the ability to heal themselves and their allies
-        // so I have implemented a simple switch statement to choose the spell based
-        // on the health of the target
-        var mana = Attribute.Mana;
         
-        switch (target)
+        if (Attribute.Health < 50 && Attribute.Mana > HealCost)
         {
-            case var x when x.Attribute.Health < 30:
-                Heal(target);
-                break;
-            // using pattern matching 
-            case var x when x.Attribute.Health < 50 && mana < HealCost:
-                Heal(target);
-                break;
-            default:
-                BasicAttack(target);
-                break;
+            Heal();
+        }
+        else if(Attribute.Rage >= 25)
+        {
+            HeavySwing(target);
+            Attribute.Rage -= 25;
+            Attribute.Mana += new Random().Next(8, 11);
+        }
+        else
+        {
+            BasicAttack(target);
+            Attribute.Mana += new Random().Next(2, 17);
+            Attribute.Rage += new Random().Next(9, 23);
         }
     }
 }
