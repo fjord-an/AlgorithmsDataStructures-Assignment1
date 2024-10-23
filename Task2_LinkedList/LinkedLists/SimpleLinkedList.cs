@@ -38,6 +38,48 @@ public class SimpleLinkedList
         current.Next = newNode;
     }
     
+   public void DeleteTopNodes()
+   {
+       SimpleNode? current = _head;
+       while (current != null)
+       {
+           SimpleNode? temp = current;
+           current = current.Next;
+           temp.Next = null;
+       }
+       _head = null;
+   } 
+   
+    public void DeleteBottomNodes()
+    {
+        if (_head == null)
+            return;
+
+        SimpleNode? current = _head;
+        SimpleNode? previous = null;
+
+        while (current.Next != null)
+        {
+            previous = current;
+            current = current.Next;
+        }
+
+        while (previous != null)
+        {
+            previous.Next = null;
+            current = _head;
+            previous = null;
+
+            while (current.Next != null)
+            {
+                previous = current;
+                current = current.Next;
+            }
+        }
+
+        _head = null;
+    }
+    
     public void PrintNodes(SimpleLinkedList list, Stopwatch stopwatch, bool showData)
     {
         // IntNode? current = list._intHead;
@@ -56,8 +98,15 @@ public class SimpleLinkedList
     public void CountElements(SimpleLinkedList list, Stopwatch stopwatch, bool showData, string mode)
     {
         // initialise count to -1 to account for zero-based indexing
-        int count = -1;
+        int count = 0;
+        if (_head == null)
+        {
+            Console.WriteLine("List is empty");
+            return;
+        }
+
         SimpleNode? current = _head.Next;
+        
         if (showData)
             while (current != null)
             {
@@ -65,7 +114,7 @@ public class SimpleLinkedList
                 current = current.Next;
             }
         
-        Console.WriteLine(count);
-        Console.WriteLine($"Time Taken for {list.GetType().Name} to {mode}:\n{stopwatch.Elapsed}");
+        Console.WriteLine($"{mode}ed {count} nodes");
+        Console.WriteLine($"Time Taken for {list.GetType().Name} to {mode}:\n{stopwatch.Elapsed} ({stopwatch.ElapsedMilliseconds}) milliseconds\n");
     }
 }

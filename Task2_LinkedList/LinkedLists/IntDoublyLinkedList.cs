@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Task2_LinkedList.Nodes;
 
-namespace Task2_LinkedList.LinkedLists;
+namespace Task2_LinkedList;
 
 public class IntDoublyLinkedList
 {
@@ -35,16 +35,6 @@ public class IntDoublyLinkedList
         _tail = _sentinel;
     }
     
-    
-    // public IntDoublyLinkedList()
-    // {
-    //     _head = _sentinel;
-    //     // Sentinel node with dummy data (-1) and flag set to
-    //     // true to indicate that it is a sentinel node for debugging clarity.
-    //     _sentinel = new IntNode(-1, isSentinel: true); 
-    //     _sentinel.Next = _sentinel;
-    //     _sentinel.Previous = _sentinel;
-    // }
     
     public IntDoublyLinkedList(IntNode node)
     {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Task2_LinkedList.Benchmarkers.LinkedListBenchmark-20241019-165416</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Arch Linux
+Intel Core i7-7700 CPU 3.60GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
+.NET SDK 8.0.108
+  [Host]     : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.8 (8.0.824.36612), X64 RyuJIT AVX2
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method              </th><th>N</th><th>Mean       </th><th>Error      </th><th>StdDev      </th>
+</tr>
+</thead><tbody><tr><td>BenchmarkSimpleListAppend</td><td>500</td><td>1,954,450.58 &mu;s</td><td>189,375.521 &mu;s</td><td>558,378.038 &mu;s</td>
+</tr><tr><td>BenchmarkSimpleListInsert</td><td>500</td><td>34.66 &mu;s</td><td>0.521 &mu;s</td><td>0.487 &mu;s</td>
+</tr><tr><td>BenchmarkIntListAppend</td><td>500</td><td>40.47 &mu;s</td><td>0.473 &mu;s</td><td>0.443 &mu;s</td>
+</tr><tr><td>BenchmarkIntListInsert</td><td>500</td><td>42.28 &mu;s</td><td>0.328 &mu;s</td><td>0.307 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListAppend</td><td>500</td><td>40.63 &mu;s</td><td>0.534 &mu;s</td><td>0.499 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListInsert</td><td>500</td><td>40.56 &mu;s</td><td>0.339 &mu;s</td><td>0.317 &mu;s</td>
+</tr><tr><td>BenchmarkSimpleListAppend</td><td>5000</td><td>18,354,080.84 &mu;s</td><td>1,773,679.502 &mu;s</td><td>5,229,734.411 &mu;s</td>
+</tr><tr><td>BenchmarkSimpleListInsert</td><td>5000</td><td>356.16 &mu;s</td><td>4.798 &mu;s</td><td>4.488 &mu;s</td>
+</tr><tr><td>BenchmarkIntListAppend</td><td>5000</td><td>408.26 &mu;s</td><td>7.214 &mu;s</td><td>6.748 &mu;s</td>
+</tr><tr><td>BenchmarkIntListInsert</td><td>5000</td><td>421.51 &mu;s</td><td>5.459 &mu;s</td><td>5.106 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListAppend</td><td>5000</td><td>405.21 &mu;s</td><td>7.262 &mu;s</td><td>6.438 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListInsert</td><td>5000</td><td>406.15 &mu;s</td><td>6.022 &mu;s</td><td>5.633 &mu;s</td>
+</tr><tr><td>BenchmarkSimpleListAppend</td><td>50000</td><td>612,113,892.62 &mu;s</td><td>59,175,079.165 &mu;s</td><td>174,479,068.712 &mu;s</td>
+</tr><tr><td>BenchmarkSimpleListInsert</td><td>50000</td><td>NA</td><td>NA</td><td>NA</td>
+</tr><tr><td>BenchmarkIntListAppend</td><td>50000</td><td>4,063.07 &mu;s</td><td>75.675 &mu;s</td><td>70.787 &mu;s</td>
+</tr><tr><td>BenchmarkIntListInsert</td><td>50000</td><td>4,272.61 &mu;s</td><td>82.241 &mu;s</td><td>76.928 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListAppend</td><td>50000</td><td>4,072.30 &mu;s</td><td>77.023 &mu;s</td><td>72.048 &mu;s</td>
+</tr><tr><td>BenchmarkGenericListInsert</td><td>50000</td><td>4,048.48 &mu;s</td><td>51.130 &mu;s</td><td>47.827 &mu;s</td>
+</tr></tbody></table>
+</body>
+</html>

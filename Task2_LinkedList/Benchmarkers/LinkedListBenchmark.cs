@@ -4,6 +4,10 @@ using Task2_LinkedList.LinkedLists;
 
 namespace Task2_LinkedList.Benchmarkers
 {
+    
+    // Benchmarking tool used: BenchmarkDotNet
+    // Overview | BenchmarkDotNet. (n.d.). Retrieved October 9, 2024, from https://benchmarkdotnet.org/articles/overview.html
+    // using JetBrains DotMemoryDiagnoser to track memory usage
     [DotMemoryDiagnoser]
     public class LinkedListBenchmark
     {
